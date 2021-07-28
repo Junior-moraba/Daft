@@ -1,5 +1,4 @@
-public class Numbers{
-
+public class oldNumbers {
     //take input of number from user
     //convert the number into text
     static String numbers[] = {"nye","bili","tatu","ne","hlanu","thupha","khombisa","shiyagalombili","shiyagalolunye","shumi","khulu","kulungwane"};
@@ -7,7 +6,7 @@ public class Numbers{
     public static boolean context;
 
     //some context could be added as a parameter to better construct the word
-    public Numbers (int no, boolean ctxt){
+    public oldNumbers (int no, boolean ctxt){
         inputNumber = no;
         context = ctxt;
     }
@@ -102,19 +101,21 @@ public class Numbers{
         String singlePrefixes[] = {"ku","isi"};
         String prefix = "";
         String root = numbers[number-1];
-        if(number <=5){
-            prefix = singlePrefixes[0];
-        }
-        else{
-            prefix = singlePrefixes[1];
-        }
-
-        if(ctxt && number<=5){
+        if (ctxt){
             return root;
         }
         else{
+            
+            if(number <=5){
+                prefix = singlePrefixes[0];
+            }
+            else{
+                prefix = singlePrefixes[1];
+            }
+    
             return prefix+root;
         }
+        
     }
 
     //For numbers not ending in zero, Not divisible by 10
