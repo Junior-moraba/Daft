@@ -93,7 +93,7 @@ public class Nouns {
         }
         else if(userNoun.substring(0, 2).equals("im") || userNoun.substring(0, 2).equals("in")){
             // class 3 : Singular
-            resultNoun = new NounData(4, userNoun.substring(0, 2),"i",true);
+            resultNoun = new NounData(3, userNoun.substring(0, 2),"i",true);
         }
         else if(userNoun.substring(0, 3).equals("isi")){
             // class 4 : Singular

@@ -4,12 +4,11 @@ public class Numbers{
     //convert the number into text
     static String numbers[] = {"nye","bili","tatu","ne","hlanu","thupha","khombisa","shiyagalombili","shiyagalolunye","shumi","khulu","kulungwane"};
     public static int inputNumber;
-    public static boolean context;
+    
 
     //some context could be added as a parameter to better construct the word
-    public Numbers (int no, boolean ctxt){
+    public Numbers (int no){
         inputNumber = no;
-        context = ctxt;
     }
 
     public static String constructNumber(){
@@ -19,7 +18,7 @@ public class Numbers{
 
         //Singles
         if(lengthOfNumber==1){
-            String word = individualNumbers(inputNumber, context);
+            String word = individualNumbers(inputNumber);
             return word;
             //System.out.println(word);
         }
@@ -98,7 +97,7 @@ public class Numbers{
     }
    
     //single digits, verbalised differently from compounded numbers hence separated.
-    private static String individualNumbers(int number,boolean ctxt){
+    private static String individualNumbers(int number){
         String singlePrefixes[] = {"ku","isi"};
         String prefix = "";
         String root = numbers[number-1];
@@ -109,12 +108,8 @@ public class Numbers{
             prefix = singlePrefixes[1];
         }
 
-        if(ctxt && number<=5){
-            return root;
-        }
-        else{
-            return prefix+root;
-        }
+        return prefix+root;
+        
     }
 
     //For numbers not ending in zero, Not divisible by 10
