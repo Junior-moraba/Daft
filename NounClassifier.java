@@ -2,17 +2,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Nouns {
-    //the purpose of this class is to determine the class where a plural noun belongs
-    //plural nouns for now, easier to get started with, rules more straightforward (without overlap)
-    //will assume that the word received is a noun, unless there is distinct feature of the word prohibiting it from being a noun
+/**
+ * This class classifies nouns according to noun class
+ * Given a noun as input will determine noun class, prefix, personal noun and whether singular or plural
+ */
+public class NounClassifier {
+    
     public static String userInput;
     public static String[] nounsOfPeople = new String[]{"umuntu","ubaba","ubhuti","umfana","umntwana","umngane"};
     public static List<String> nameList = new ArrayList<>(Arrays.asList(nounsOfPeople));
     
     
     
-    public Nouns(String noun){
+    public NounClassifier(String noun){
         userInput = noun;        
     }
 
@@ -60,20 +62,10 @@ public class Nouns {
         }
     }
 
-    /**
-     * Potentially problematic, go over examples in spreadsheet for fix suggestions
-     */
     private static NounData oPrefixes(String userNoun){
-        NounData resultNoun;
-        if (userNoun.charAt(0)=='o'){
-            //class 1
-            resultNoun = new NounData(1, "aba","ba",false);
-        }
-        else{
-            //special case 
-            resultNoun = new NounData(0);
-            
-        }
+        //Beginning with o can only fall into class 1
+        NounData resultNoun; 
+        resultNoun = new NounData(1, "aba","ba",false);
         return resultNoun;
     }
 

@@ -1,128 +1,126 @@
-public class oldNumbers {
-    //take input of number from user
-    //convert the number into text
-    static String numbers[] = {"nye","bili","tatu","ne","hlanu","thupha","khombisa","shiyagalombili","shiyagalolunye","shumi","khulu","kulungwane"};
-    public static int inputNumber;
-    public static boolean context;
+public class NumbersVerbaliser{
 
-    //some context could be added as a parameter to better construct the word
-    public oldNumbers (int no, boolean ctxt){
-        inputNumber = no;
-        context = ctxt;
+    /**
+     * Accepets a numerical number and returns the number as a word
+     */
+    static String roots[] = {"nye","bili","tatu","ne","hlanu","thupha","khombisa","shiyagalombili","shiyagalolunye","shumi","khulu","kulungwane"};
+    public static int inputNumber;
+    
+
+    public NumbersVerbaliser (int input_number){
+        inputNumber = input_number;
     }
 
     public static String constructNumber(){
-        String numAsText = Integer.toString(inputNumber);
-        int lengthOfNumber = numAsText.length();
-        String numberText = "";
+        String intAsString = Integer.toString(inputNumber);
+        int lengthOfNumber = intAsString.length();
+        String verbalisedNumber = "";
 
-        //Singles
+        //Singles 1 - 9
         if(lengthOfNumber==1){
-            String word = individualNumbers(inputNumber, context);
-            return word;
-            //System.out.println(word);
+            verbalisedNumber = individualNumbers(inputNumber);
         }
-        //Tens
+        //Tens; 10 - 99
         else if(lengthOfNumber==2){
-            //3 cases: exactly 10, end with a 0, end with any other number
-            String word1,word2,word3;
-            word1 = word2 = word3 = "";
-            int firstDigit = Integer.parseInt(Character.toString(numAsText.charAt(0)));
-            int secondDigit = Integer.parseInt(Character.toString(numAsText.charAt(1)));
-
-
-            word1 = numClass(firstDigit, "tens",true);
-            word2 = multiplierDigit(firstDigit, "tens");
-
-            if(secondDigit!=0){ //numbers not ending with a zero
-                word3 = compound(secondDigit);
-            }
-
-            numberText = String.join(" ", word1, word2, word3);
-            return numberText;
-            //System.out.println((word1+" "+word2+" "+word3).strip());
-            
-            
+            verbalisedNumber = tens(intAsString);
         }
         //Hundreds
         else if (lengthOfNumber==3){
-            String word1,word2,word3,word4,word5;
-            word1 = word2 = word3 = word4 = word5 = "";
-            int firstDigit = Integer.parseInt(Character.toString(numAsText.charAt(0)));
-            int secondDigit = Integer.parseInt(Character.toString(numAsText.charAt(1)));
-            int thirdDigit = Integer.parseInt(Character.toString(numAsText.charAt(2)));
-
-            word1 = numClass(firstDigit, "hundreds",true);
-            word2 = multiplierDigit(firstDigit, "hundreds");
-            word3 = numClass(secondDigit, "tens",false);
-            word4 = multiplierDigit(secondDigit, "tens");
-
-            if(thirdDigit!=0){ //numbers not ending with a zero
-                word5 = compound(thirdDigit);
-            }
-
-            numberText = String.join(" ", word1, word2, word3,word4,word5);
-            return numberText;
-            //System.out.println((word1+" "+word2+" "+word3+" "+word4+" "+ word5).strip());
+            verbalisedNumber = hundreds(intAsString);
         }
         //Thousands
         else if (lengthOfNumber==4){
-            String word1,word2,word3,word4,word5,word6,word7;
-            word1 = word2 = word3 = word4 = word5 = word6 = word7 = "";
-            int firstDigit = Integer.parseInt(Character.toString(numAsText.charAt(0)));
-            int secondDigit = Integer.parseInt(Character.toString(numAsText.charAt(1)));
-            int thirdDigit = Integer.parseInt(Character.toString(numAsText.charAt(2)));
-            int fourthDigit = Integer.parseInt(Character.toString(numAsText.charAt(3)));
-
-            word1 = numClass(firstDigit, "thousands",true);
-            word2 = multiplierDigit(firstDigit, "thousands");
-            word3 = numClass(secondDigit, "hundreds",false);
-            word4 = multiplierDigit(secondDigit, "hundreds");
-            word5 = numClass(thirdDigit, "tens",false);
-            word6 = multiplierDigit(thirdDigit, "tens");
-
-            if(fourthDigit!=0){ //numbers not ending with a zero
-                word7 = compound(fourthDigit);
-            }
-
-            numberText = String.join(" ", word1, word2, word3,word4,word5,word6,word7);
-            return numberText;
-
-            //System.out.println((word1+" "+word2+" "+word3+" "+word4+" "+ word5+" "+word6+" "+word7).strip());
+            verbalisedNumber = thousands(intAsString);
         }
         else{
-            return "Numbers must be within range 1-9999";
-            //System.out.println("Numbers must be within range 1-9999");
+            return "Number must be within range 1-9999";
         }
+        return verbalisedNumber;
     }
-   
+    
+
     //single digits, verbalised differently from compounded numbers hence separated.
-    private static String individualNumbers(int number,boolean ctxt){
+    private static String individualNumbers(int number){
         String singlePrefixes[] = {"ku","isi"};
         String prefix = "";
-        String root = numbers[number-1];
-        if (ctxt){
-            return root;
+        String root = roots[number-1];
+        if(number <=5){
+            prefix = singlePrefixes[0];
         }
         else{
-            
-            if(number <=5){
-                prefix = singlePrefixes[0];
-            }
-            else{
-                prefix = singlePrefixes[1];
-            }
-    
-            return prefix+root;
+            prefix = singlePrefixes[1];
+        }
+
+        return prefix+root;   
+    }
+
+    private static String tens(String intAsString){
+        String word1,word2,word3;
+        word1 = word2 = word3 = "";
+        
+        int firstDigit = Integer.parseInt(Character.toString(intAsString.charAt(0)));
+        int secondDigit = Integer.parseInt(Character.toString(intAsString.charAt(1)));
+
+        word1 = numClass(firstDigit, "tens",true);
+        word2 = multiplierDigit(firstDigit, "tens");
+
+        if(secondDigit!=0){ //numbers not ending with a zero
+            word3 = compound(secondDigit);
+        }
+        return String.join(" ", word1, word2, word3).replaceAll("\\s{2,}"," "); //regex for removing unneccesary spaces if any   
+    }
+
+
+
+    private static String hundreds(String intAsString){
+        String word1,word2,word3,word4,word5;
+        word1 = word2 = word3 = word4 = word5 = "";
+        int firstDigit = Integer.parseInt(Character.toString(intAsString.charAt(0)));
+        int secondDigit = Integer.parseInt(Character.toString(intAsString.charAt(1)));
+        int thirdDigit = Integer.parseInt(Character.toString(intAsString.charAt(2)));
+
+        word1 = numClass(firstDigit, "hundreds",true);
+        word2 = multiplierDigit(firstDigit, "hundreds");
+        word3 = numClass(secondDigit, "tens",false);
+        word4 = multiplierDigit(secondDigit, "tens");
+
+        //numbers not ending with a zero
+        if(thirdDigit!=0){ 
+            word5 = compound(thirdDigit);
+        }
+
+        return String.join(" ", word1, word2, word3,word4,word5).replaceAll("\\s{2,}"," "); //regex for removing unneccesary spaces if any
+    }
+
+
+    private static String thousands(String intAsString){
+        String word1,word2,word3,word4,word5,word6,word7;
+        word1 = word2 = word3 = word4 = word5 = word6 = word7 = "";
+        int firstDigit = Integer.parseInt(Character.toString(intAsString.charAt(0)));
+        int secondDigit = Integer.parseInt(Character.toString(intAsString.charAt(1)));
+        int thirdDigit = Integer.parseInt(Character.toString(intAsString.charAt(2)));
+        int fourthDigit = Integer.parseInt(Character.toString(intAsString.charAt(3)));
+
+        word1 = numClass(firstDigit, "thousands",true);
+        word2 = multiplierDigit(firstDigit, "thousands");
+        word3 = numClass(secondDigit, "hundreds",false);
+        word4 = multiplierDigit(secondDigit, "hundreds");
+        word5 = numClass(thirdDigit, "tens",false);
+        word6 = multiplierDigit(thirdDigit, "tens");
+
+        //numbers not ending with a zero
+        if(fourthDigit!=0){ 
+            word7 = compound(fourthDigit);
         }
         
+        return String.join(" ", word1, word2, word3,word4,word5,word6,word7).replaceAll("\\s{2,}"," "); //regex for removing unneccesary spaces if any
     }
 
     //For numbers not ending in zero, Not divisible by 10
     private static String compound(int number){
         String singleCompoundPrefixes[] = {"na","nam","nan","nesi"};
         String prefix = ""; 
-        String root = numbers[number-1];
+        String root = roots[number-1];
         /**grammar rules come into play when choosing the correct prefix for values less than 5, 
          * could be argued that this is also the case for values greater than 6
         */
@@ -152,7 +150,7 @@ public class oldNumbers {
             String tensAndHundredsPrefixes[] = {"ama","ayisi"};
             String thousandsPrefixes[] = {"ezim","ezin","ezi","eziyisi"};
             String prefix = ""; 
-            String root = numbers[number-1];
+            String root = roots[number-1];
             if (group=="tens" || group=="hundreds"){
                 if(number>1 && number <=5){
                     prefix = tensAndHundredsPrefixes[0];
@@ -209,29 +207,24 @@ public class oldNumbers {
                     }
                     else{
                         prefix = tensAndHundredsPrefixs[3]; //sub number
-                    }
-                    
+                    }   
                 }
-
                 if(group=="tens"){
-                    root = numbers[9]; //shumi
+                    root = roots[9]; //shumi
                 }
                 //hundreds
                 else{
-                    root=numbers[10]; //khulu
+                    root=roots[10]; //khulu
                 }
-
                 return prefix+root;
             }
-        
             else if (group=="thousands"){
-                root = numbers[11]; //kulungwane
+                root = roots[11]; //kulungwane
                 if (number==1){ //one thousand
                     prefix = thousandsPrefixs[0];
                 }else{ //multiple thousands
                     prefix = thousandsPrefixs[1]; 
                 }
-
                 return prefix+root;
             }
             else{
@@ -239,6 +232,4 @@ public class oldNumbers {
             }
         }
     }
-
-   
 }

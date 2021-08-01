@@ -1,66 +1,53 @@
-import java.util.Scanner;
-
-public class Control {
+import java.util.Objects;
+public class NumberContextControl {
     
-    /**
-     * 1. Include no context option in parameters,
-     * 2. maybe if number not equal to 1 don't allow for ordinals
-     * 3. maybe if number equal to 1 dont allow for plurals or convert plural to singular
-     * 4. if number not equal to 1, convert noun to plural if necessary and possible
-     * But is this part of the scope(3,4) or possible scope creep
-     * 5. If Zola happy, Begin phase 2 officially on Monday (2 August)
-     */
-    
-    public static void main(String[] args){
-        /**
-         * Remove this during refactoring, let this class just take this inputs as parameters instead
-         * remove main class
-         * Rename classes (numbers to numbersVerbaliser) 
-         */
-        Scanner userInput = new Scanner(System.in);
-        System.out.println("Enter a number: ");
-        int numberInput = userInput.nextInt();
-        userInput.nextLine();
-        System.out.println("Enter a noun: ");
-        String nounInput = userInput.nextLine();
-        System.out.println("Enter Texttype (C or O): ");
-        String textType = userInput.nextLine().toLowerCase();
-        String cardinalType = "e";
-        if(textType.equals("c")){
-            System.out.println("Enter CardinalType (E or P): ");
-            cardinalType = userInput.nextLine().toLowerCase();
-        }
+    static int numberInput;
+    static String nounType;
+    static String nounInput;
 
-        userInput.close();
+    //Just for numbers, without context
+    public NumberContextControl(int number_input){
+        numberInput = number_input;
+    }
+    //numbers with context
+    public NumberContextControl(int number_input,String noun_input,String noun_type){
+        numberInput = number_input;
+        nounType = noun_type.toLowerCase();
+        nounInput = noun_input.toLowerCase();
+    }
 
-        //noun information
-        Nouns noun = new Nouns(nounInput);
-        NounData nounData = noun.getNounData();
-        char relativeNoun = noun.getRelativePronoun();
+    public static String verbalise(){
 
-
-        //number formation
-        Numbers number = new Numbers(numberInput);
+         //number formation
+        NumbersVerbaliser number = new NumbersVerbaliser(numberInput);
         String numberAString = number.constructNumber();
-
-        //Refactor this
-        String finalSentence;    
-        if(textType.equals("c")){
-            String constructedNumber = constructCardinalNumber(relativeNoun,nounData,number.inputNumber,numberAString);
-            if(cardinalType.equals("e")){
-                finalSentence = constructSentence(nounInput,constructedNumber,"epithet");
-
-            }
-            else{
-                finalSentence = constructSentence(nounInput,constructedNumber,"predicate");
-            }
+        if (Objects.isNull(nounInput)){
+            return numberAString;
         }
         else{
-            String constructedOrdinal = constructOrdinalNumber(nounData,number.inputNumber,numberAString);
-            finalSentence = constructSentence(nounInput,constructedOrdinal,"ordinal");
-        }
+            //noun information
+            NounClassifier noun = new NounClassifier(nounInput);
+            NounData nounData = noun.getNounData();
+            char relativeNoun = noun.getRelativePronoun();
 
-        System.out.println(finalSentence);
+            String finalSentence;
+            
+            if(nounType.equals("e") || nounType.equals("p")){
+                String constructedNumber = constructCardinalNumber(relativeNoun,nounData,number.inputNumber,numberAString);
+                if(nounType.equals("e")){
+                    finalSentence = constructSentence(nounInput,constructedNumber,"epithet");
+    
+                }
+                else{
+                    finalSentence = constructSentence(nounInput,constructedNumber,"predicate");
+                }
+            }
+            else{
+                String constructedOrdinal = constructOrdinalNumber(nounData,number.inputNumber,numberAString);
+                finalSentence = constructSentence(nounInput,constructedOrdinal,"ordinal");
+            }
+            return finalSentence;
+        }
     }
 
     /** 
@@ -72,7 +59,7 @@ public class Control {
         
         String pNoun = nounData.personalNoun;
         String prefix = nounData.prefix;
-        int nclass = nounData.nClass;
+        int nounClass = nounData.nClass;
 
         String specialPrefix = "";
         String finalnumber;
@@ -132,12 +119,12 @@ public class Control {
          */
         String[] prefixOptions = {"y","l","y","s","w","l","b","k"};
         if (number==1 && nounData.singularity){
-            if(nclass==1){
+            if(nounClass==1){
                 //class 1, uses an e instead of o to combine the innerprefix and the 'dwa'
-                numberAsString = prefixOptions[nclass-1] + "e" + "dwa";
+                numberAsString = prefixOptions[nounClass-1] + "e" + "dwa";
             }
             else{
-                numberAsString = prefixOptions[nclass-1] + "o" + "dwa";
+                numberAsString = prefixOptions[nounClass-1] + "o" + "dwa";
             }
         }
 
@@ -168,7 +155,7 @@ public class Control {
         
         String prefix;
         String finalNumber;
-        int nclass = nounData.nClass;
+        int nounClass = nounData.nClass;
 
         String[] prefixOptions = {"w","l","y","s","w","l","b","k"};
         
@@ -191,7 +178,7 @@ public class Control {
          * Rule 3
          * get the relative pronoun using the number as a noun ***weird***
         */
-        RelativePronoun rp = new RelativePronoun(numberAsString);
+        RelativePronoun relPronoun = new RelativePronoun(numberAsString);
         /**
          * Rule 4
          * remove the first letter of the number, isiZulu rule to never have consecutive vowels
@@ -205,11 +192,11 @@ public class Control {
          * No special rules for the rest, just choose correct prefix option, and add the relative pronoun... 
          * to that prefixOption to form the prefix of the overall number
          */
-        if (nclass==6 || nclass==8){
-        prefix = prefixOptions[nclass-1] + "w" + rp.getRelativePronoun();
+        if (nounClass==6 || nounClass==8){
+        prefix = prefixOptions[nounClass-1] + "w" + relPronoun.getRelativePronoun();
         }
         else{
-        prefix = prefixOptions[nclass-1] + rp.getRelativePronoun();
+        prefix = prefixOptions[nounClass-1] + relPronoun.getRelativePronoun();
         }
 
         finalNumber = String.join("", prefix,numberAsString);
