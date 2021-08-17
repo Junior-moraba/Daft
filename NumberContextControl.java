@@ -36,17 +36,23 @@ public class NumberContextControl {
                 String constructedNumber = constructCardinalNumber(relativeNoun,nounData,number.inputNumber,numberAString);
                 if(nounType.equals("e")){
                     finalSentence = constructSentence(nounInput,constructedNumber,"epithet");
+                    
     
                 }
                 else{
                     finalSentence = constructSentence(nounInput,constructedNumber,"predicate");
                 }
+                return constructedNumber; //dont return on normal circumstances
             }
             else{
                 String constructedOrdinal = constructOrdinalNumber(nounData,number.inputNumber,numberAString);
                 finalSentence = constructSentence(nounInput,constructedOrdinal,"ordinal");
+                
+                return constructedOrdinal; //dont return on normal circumstances
+
             }
-            return finalSentence;
+            //return finalSentence; //ordinarily return this
+             
         }
     }
 

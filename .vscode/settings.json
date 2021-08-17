@@ -1,0 +1,33 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "/Users/vhulendamoraba/Downloads/xmlbeans-2.6.0.jar",
+            "/Users/vhulendamoraba/Downloads/commons-collections4-4.1.jar",
+            "/Users/vhulendamoraba/Downloads/commons-compress-1.21/commons-compress-1.21-javadoc.jar",
+            "/Users/vhulendamoraba/Downloads/commons-compress-1.21/commons-compress-1.21-sources.jar",
+            "/Users/vhulendamoraba/Downloads/commons-compress-1.21/commons-compress-1.21-test-sources.jar",
+            "/Users/vhulendamoraba/Downloads/commons-compress-1.21/commons-compress-1.21-tests.jar",
+            "/Users/vhulendamoraba/Downloads/commons-compress-1.21/commons-compress-1.21.jar",
+            "/Users/vhulendamoraba/Downloads/poi-3.17.jar",
+            "/Users/vhulendamoraba/Downloads/poi-ooxml-3.17.jar",
+            "/Users/vhulendamoraba/Downloads/poi-ooxml-schemas-3.17.jar",
+            "/Users/vhulendamoraba/Downloads/commons-text-1.9/commons-text-1.9-javadoc.jar",
+            "/Users/vhulendamoraba/Downloads/commons-text-1.9/commons-text-1.9-sources.jar",
+            "/Users/vhulendamoraba/Downloads/commons-text-1.9/commons-text-1.9-test-sources.jar",
+            "/Users/vhulendamoraba/Downloads/commons-text-1.9/commons-text-1.9-tests.jar",
+            "/Users/vhulendamoraba/Downloads/commons-text-1.9/commons-text-1.9.jar",
+            "/Users/vhulendamoraba/Downloads/commons-lang3-3.12.0/commons-lang3-3.12.0-javadoc.jar",
+            "/Users/vhulendamoraba/Downloads/commons-lang3-3.12.0/commons-lang3-3.12.0-sources.jar",
+            "/Users/vhulendamoraba/Downloads/commons-lang3-3.12.0/commons-lang3-3.12.0-test-sources.jar",
+            "/Users/vhulendamoraba/Downloads/commons-lang3-3.12.0/commons-lang3-3.12.0-tests.jar",
+            "/Users/vhulendamoraba/Downloads/commons-lang3-3.12.0/commons-lang3-3.12.0.jar"
+        ],
+        "exclude": [
+            "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-excelant-5.0.0.jar",
+            "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-integration-5.0.0.jar",
+            "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-ooxml-5.0.0.jar",
+            "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-ooxml-full-5.0.0.jar"
+        ]
+    }
+}
