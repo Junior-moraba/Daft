@@ -46,7 +46,7 @@ public class testMessages {
         
         
         //Not always applicable
-        hashMostSpent.put("CATEGORIES-WHERE-MOST-MONEY-SPENT", "imali zesikolo,igrosa,uphethiloli,umshwalense");
+        hashMostSpent.put("CATEGORIES-WHERE-MOST-MONEY-SPENT", "imali yesikolo,igrosa,uphethiloli,umshuwalense");
         Message mostSpent = new Message("msg5", "mostMoney", hashMostSpent);
         messages.add(mostSpent); 
         

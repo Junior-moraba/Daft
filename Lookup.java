@@ -64,22 +64,22 @@ public class Lookup {
                 statusValue = me.getValue().toString();
             }    
             
-            System.out.println(message.getRelation());
+            
             if (message.getRelation().equals("currentAmount")){
                 String noun = "amarandi"; //un, ignored (explain why in paper)
-                current = replaceText(templates.get(0),noun,statusValue);
+                current = fillTemplate(templates.get(0),noun,statusValue);
                 System.out.println(current);
             }
             else if (message.getRelation().equals("statusOfBudgets")){
                 if (status.equals("CLOSE-TO-BUDGET")){
                     String noun = "amarandi";
-                    budget = replaceText2(templates.get(1),noun,statusValue);
+                    budget = fillTemplate(templates.get(1),noun,statusValue);
 
 
                 }
                 else if (status.equals("OVER-BUDGET")){
                     String noun = "amarandi";
-                    budget = replaceText3(templates.get(2),noun,statusValue);
+                    budget = fillTemplate(templates.get(2),noun,statusValue);
                 }
                 else if (status.equals("NOT-OVER-BUDGET")){
                     budget = templates.get(3);
@@ -97,11 +97,11 @@ public class Lookup {
                 }
                 else if (status.equals("OVER-SAVING")){
                     String noun = "Amarandi";
-                    savings = replaceText(templates.get(5),noun,statusValue);
+                    savings = fillTemplate(templates.get(5),noun,statusValue);
                 }
                 else if (status.equals("NOT-REACHED-SAVINGS-GOAL")){
                     String noun = "Amarandi";
-                    savings = replaceText(templates.get(6),noun,statusValue);
+                    savings = fillTemplate(templates.get(6),noun,statusValue);
                 }
                 else{
                     savings = "unknown";
@@ -110,11 +110,12 @@ public class Lookup {
             }
             else if (message.getRelation().equals("bankCharges")){
                 String noun = "Amarandi";
-                charges = replaceText(templates.get(7),noun,statusValue);
+                charges = fillTemplate(templates.get(7),noun,statusValue);
                 System.out.println(charges);
             }
             else if (message.getRelation().equals("mostMoney")){
-                spent = templates.get(8);
+                String noun="";
+                spent = fillTemplate(templates.get(8),noun,statusValue);
                 System.out.println(spent);
             }
             else{
@@ -123,59 +124,65 @@ public class Lookup {
             
         }
     }
-    public static String replaceText(String template, String noun, String statusValue){
+
+    public static String fillTemplate (String template,String noun ,String statusValue){
         NumberContextControl numContextControl;
-        Map<String, String> valuesMap = new HashMap<String, String>();
+        Map<String, String> templateSlots = new HashMap<String, String>();
+        //its important to ask amy how the linkedHashMap will be filled as that severly affects statusValue
 
-        
-        //scenario where statusvalue = category:value, category:value
-        int currentAmount = Integer.parseInt(statusValue);
-        numContextControl = new NumberContextControl(currentAmount,noun,"e");
+        //template: 2 and 8
+        if (statusValue.contains(",")){
+            //2
+            if (statusValue.contains(":")){
+                String needs = statusValue.split(",")[0];
+                String luxuries = statusValue.split(",")[1];
+                int needsCurrentAmount = Integer.parseInt(needs.split(":")[1]);
+                int luxuriesCurrentAmount = Integer.parseInt(luxuries.split(":")[1]);
+                numContextControl = new NumberContextControl(needsCurrentAmount,noun,"e");
+                templateSlots.put("Amount",numContextControl.verbalise());
+                numContextControl = new NumberContextControl(luxuriesCurrentAmount,noun,"e");
+                templateSlots.put("Amount2",numContextControl.verbalise());
+            }
+            // 8
+            else{
+                String[] subCategories = statusValue.split(",");
+                int subCatlength = subCategories.length-1;
+                String[] slotList = {"subCategory1","subCategory2","subCategory3","subCategory4"};
+                for (int category=0; category<subCatlength;category++){
+                    templateSlots.put(slotList[category],subCategories[category]);    
+                }
+                String lastSubcategory = subCategories[subCatlength];
+                char lastSubCategoryRP = new RelativePronoun(lastSubcategory).getRelativePronoun();
+                String conjunction = "n"+lastSubCategoryRP;
+                templateSlots.put("na",conjunction);
+                templateSlots.put(slotList[subCatlength],lastSubcategory.substring(1));
+                
+            }
+        }
+        //templates: 1
+        else if (statusValue.contains(":")){
+            String category = statusValue.split(":")[0];
+            NounClassifier nounclassifier = new NounClassifier(category);
+            NounData nounData = nounclassifier.getNounData();
 
-        valuesMap.put("Amount", numContextControl.verbalise());
-        StringSubstitutor sub = new  StringSubstitutor(valuesMap);
-        String resolvedString = sub.replace(template);
-        
-        return resolvedString;
-    } 
-    public static String replaceText2 (String template,String noun ,String statusValue){
-        NumberContextControl numContextControl;
-        Map<String, String> valuesMap = new HashMap<String, String>();
-        
-        //scenario where statusvalue = category:value, category:value
-        String category = statusValue.split(":")[0];
-        NounClassifier nounclassifier = new NounClassifier(category);
-        NounData nounData = nounclassifier.getNounData();
+            int currentAmount = Integer.parseInt(statusValue.split(":")[1]);
+            numContextControl = new NumberContextControl(currentAmount,noun,"e");
 
-        int currentAmount = Integer.parseInt(statusValue.split(":")[1]);
-        numContextControl = new NumberContextControl(currentAmount,noun,"e");
-
-        valuesMap.put("Amount",numContextControl.verbalise());
-        valuesMap.put("Category", category);
-        valuesMap.put("dlule", nounData.getPersonalNoun()+"dlule");
-        StringSubstitutor sub = new  StringSubstitutor(valuesMap);
-        String resolvedString = sub.replace(template);
+            templateSlots.put("Amount",numContextControl.verbalise());
+            templateSlots.put("Category", category);
+            templateSlots.put("dlule", nounData.getPersonalNoun()+"dlule");
+        }
+        else{
+            //templates: 0, 5, 6, 7
+            int currentAmount = Integer.parseInt(statusValue);
+            numContextControl = new NumberContextControl(currentAmount,noun,"e");
+            templateSlots.put("Amount", numContextControl.verbalise());
+        }
+       
+        StringSubstitutor stringSub = new  StringSubstitutor(templateSlots);
+        String filledTemplate = stringSub.replace(template);
         
-        return resolvedString;
-    } 
-    public static String replaceText3 (String template,String noun ,String statusValue){
-        NumberContextControl numContextControl;
-        Map<String, String> valuesMap = new HashMap<String, String>();
-        
-        //scenario where statusvalue = category:value, category:value
-        String needs = statusValue.split(",")[0];
-        String luxuries = statusValue.split(",")[1];
+        return filledTemplate;
+    }
 
-
-        int needsCurrentAmount = Integer.parseInt(needs.split(":")[1]);
-        int luxuriesCurrentAmount = Integer.parseInt(luxuries.split(":")[1]);
-        numContextControl = new NumberContextControl(needsCurrentAmount,noun,"e");
-        valuesMap.put("Amount",numContextControl.verbalise());
-        numContextControl = new NumberContextControl(luxuriesCurrentAmount,noun,"e");
-        valuesMap.put("Amount2",numContextControl.verbalise());
-        StringSubstitutor sub = new  StringSubstitutor(valuesMap);
-        String resolvedString = sub.replace(template);
-        
-        return resolvedString;
-    } 
 }  
