@@ -29,6 +29,7 @@ public class TemplateFiller {
         int randomInt = 0;
         String templateNumber="";
         String template="";
+        
 
         ArrayList<String> selectedTemplate = new ArrayList<String>();
         
@@ -83,6 +84,7 @@ public class TemplateFiller {
         {
             template = "";
             templateNumber ="";
+         
         }
         
         selectedTemplate.add(template);
@@ -104,6 +106,7 @@ public class TemplateFiller {
             for (Map.Entry<String,String> argument : argumentsHashMap.entrySet()){
                 if (argument.getKey().equals("status")){//this represents a new set of messages, status always first argument
                     template = selectAppropriateTemplate(argument.getValue()); //selecting the template
+                    template.add(message.getRelation());
                 }
                 else{
                     slotFillers.put(argument.getKey(), argument.getValue());
@@ -146,86 +149,65 @@ public class TemplateFiller {
     public static Map<String, String> applyGrammarRules(ArrayList<String> template,Map<String,String> slotFillers){
         
         String templateNo = template.get(1) ;        
-        Map<String, String> templateSlots = new HashMap<String, String>();
-
-        if(templateNo.equals("0.0") ||templateNo.equals("0.1") ||templateNo.equals("0.2") 
-        || templateNo.equals("5.0") ||templateNo.equals("6.0") || templateNo.equals("7.0") ){
-            int amount = 0;
+        Map<String, String> templateSlots = new HashMap<String, String>(); 
+        int amount, cat1Value ,  cat2Value;
+        amount = cat1Value = cat2Value = 0;
+        String  category,  cat1Name, cat2Name;
+        category = cat1Name  = cat2Name ="";
+        ArrayList<String> subCategories = new ArrayList<String>();
+        for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
             
-            for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
-                if(slotFiller.getKey().equals("value")){
-                    amount = Integer.parseInt(slotFiller.getValue());
-                }
+            if(slotFiller.getKey().equals("value")){
+                amount = Integer.parseInt(slotFiller.getValue());
             }
-            templateSlots.put("Amount", Rules.rule1(amount, "Amarandi"));
-        }
-       
-        //grammar rules that only apply to templates 1.0 and 2.0
-        else if (templateNo.equals("2.0") || templateNo.equals("1.0")){
-            String category = "";
-            int cat1Amount=0;
-            int cat2Amount=0;
-            String cat1Value, cat1Name, cat2Value, cat2Name;
-            cat1Value = cat1Name = cat2Value = cat2Name ="";
-            
-            for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
-                if(slotFiller.getKey().equals("category1Value")){
-                    cat1Value = slotFiller.getValue();
-                }
-                else if(slotFiller.getKey().equals("category2Value")){
-                    cat2Value = slotFiller.getValue();
-                }
-                //might need to use this if templates was to be modified
-                else if (slotFiller.getKey().equals("category1Name")){
-                    cat1Name = slotFiller.getValue(); 
-                }
-                else if (slotFiller.getKey().equals("category2Name")){
-                    cat2Name = slotFiller.getValue();
-                }
-                else{
-                    continue;
-                }
-               
+            else if(slotFiller.getKey().equals("category1Value")){
+                cat1Value = Integer.parseInt(slotFiller.getValue());
             }
-            
-            cat1Amount = Integer.parseInt(cat1Value);
-            cat2Amount = Integer.parseInt(cat2Value);
-            String noun = "Amarandi";
-
-            templateSlots.put("Amount1",Rules.rule1(cat1Amount, noun));
-            templateSlots.put("Amount2",Rules.rule1(cat2Amount, noun));
-            
-            if ( templateNo.equals("1.0")){
-                if (cat1Name.equals("luxury")){
-                    category = "ukunethezeka";
-                }
-                else{
-                    category = "izidingo";
-                }
-            
-                templateSlots.put("Category", category);
-                templateSlots.put("dlule", Rules.Rule3(category, "dlule"));
+            else if(slotFiller.getKey().equals("category2Value")){
+                cat2Value = Integer.parseInt(slotFiller.getValue());
             }
-            
-        }
-        else if (templateNo.equals("8.0")){
-            ArrayList<String> subCategories = new ArrayList<String>();
-            for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
+            //might need to use this if templates was to be modified
+            else if (slotFiller.getKey().equals("category1Name")){
+                cat1Name = slotFiller.getValue(); 
+            }
+            else if (slotFiller.getKey().equals("category2Name")){
+                cat2Name = slotFiller.getValue();
+            }
+            else if (slotFiller.getKey().startsWith("subCategory")) {
                 subCategories.add(slotFiller.getValue());
             }
-            int subCatlength = subCategories.size()-1;
+        }
+        
+        if (cat1Name.equals("luxury")){
+            category = "ukunethezeka";
+        }
+        else{
+            category = "izidingo";
+        }
+        
+        int subCatlength = subCategories.size()-1;
+        if (subCatlength!=-1){
             String[] slotList = {"subCategory1","subCategory2","subCategory3","subCategory4"};
-            for (int category=0; category<subCatlength;category++){
-                templateSlots.put(slotList[category],subCategories.get(category));    
+            for (int cat=0; cat<subCatlength;cat++){
+                templateSlots.put(slotList[cat],subCategories.get(cat));    
             }
             String lastSubcategory = subCategories.get(subCatlength);
-    
+
             templateSlots.put("na",Rules.rule2("na", lastSubcategory));
             templateSlots.put(slotList[subCatlength],lastSubcategory.substring(1));
-            
         }
+        
+
+        //the template will only entertain slots which it has and ignore rest
+        templateSlots.put("Amount", Rules.rule1(amount, "Amarandi")); //not always
+        templateSlots.put("Amount1",Rules.rule1(cat1Value, "Amarandi"));
+        templateSlots.put("Amount2",Rules.rule1(cat2Value, "Amarandi"));
+
+        templateSlots.put("Category", category);
+        templateSlots.put("dlule", Rules.Rule3(category, "dlule"));
 
         return templateSlots;
     }    
     
 }
+        
