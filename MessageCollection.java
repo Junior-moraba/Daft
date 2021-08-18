@@ -22,22 +22,22 @@ public class MessageCollection {
         
         //Only one of this applicable at a time
         // Problem with close: is it over close or under close ???
-        // hashBudget.put("status","CLOSE-TO-BUDGET");
-        // hashBudget.put("category1Name","luxury");
-        // hashBudget.put("category1Value","70");
-        // hashBudget.put("category2Name","neccesity");
-        // hashBudget.put("category2Value","123");
-        // Message budget = new Message("msg2", "statusOfBudgets", hashBudget);
-        // messages.add(budget);
-        
-
-        hashBudget.put("status","OVER-BUDGET");
+        hashBudget.put("status","CLOSE-TO-BUDGET");
         hashBudget.put("category1Name","luxury");
-        hashBudget.put("category1Value","7230");
+        hashBudget.put("category1Value","70");
         hashBudget.put("category2Name","neccesity");
         hashBudget.put("category2Value","123");
         Message budget = new Message("msg2", "statusOfBudgets", hashBudget);
         messages.add(budget);
+        
+
+        // hashBudget.put("status","OVER-BUDGET");
+        // hashBudget.put("category1Name","luxury");
+        // hashBudget.put("category1Value","7230");
+        // hashBudget.put("category2Name","neccesity");
+        // hashBudget.put("category2Value","123");
+        // Message budget = new Message("msg2", "statusOfBudgets", hashBudget);
+        // messages.add(budget);
 
         // hashBudget.put("status","NOT-OVER-BUDGET");
         // Message budget = new Message("msg2", "statusOfBudgets", hashBudget);

@@ -47,13 +47,18 @@
             "Java Libraries/commons-lang3-3.12.0/**/*.jar",
             "Java Libraries/commons-text-1.9/**/*.jar",
             "Java Libraries/poi-3.17/**/*.jar",
-            "Java Libraries/xmlbeans/**/*.jar"
+            "Java Libraries/xmlbeans/**/*.jar",
+            "Java Libraries/poi-4/**/*.jar"
         ],
         "exclude": [
             "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-excelant-5.0.0.jar",
             "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-integration-5.0.0.jar",
             "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-ooxml-5.0.0.jar",
-            "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-ooxml-full-5.0.0.jar"
+            "/Users/vhulendamoraba/Downloads/poi-5.0.0/poi-ooxml-full-5.0.0.jar",
+            "Java Libraries/poi-3.17/poi-3.17.jar",
+            "Java Libraries/poi-3.17/poi-ooxml-3.17.jar",
+            "Java Libraries/poi-3.17/poi-ooxml-schemas-3.17.jar",
+            "Java Libraries/xmlbeans/xmlbeans-2.6.0.jar"
         ]
     }
 }

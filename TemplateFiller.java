@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ public class TemplateFiller {
         ArrayList<Message> messages = MessageCollection.getMessages();
         String generatedText = fillTemplates(messages);
         System.out.println(generatedText);
+        writeToFile(generatedText);
 
     }
 
@@ -128,25 +131,33 @@ public class TemplateFiller {
         }
         return stringBuffer.toString();
     }
+    private static void writeToFile(String sentence){
+        try{ 
+            FileWriter fileWriter = new FileWriter("generatedText.txt");
+            fileWriter.write(sentence);
+            fileWriter.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
+    }
 
     public static Map<String, String> applyGrammarRules(ArrayList<String> template,Map<String,String> slotFillers){
         
-        String templateNo = template.get(1) ;
-        NumberContextControl numContextControl;
+        String templateNo = template.get(1) ;        
         Map<String, String> templateSlots = new HashMap<String, String>();
 
         if(templateNo.equals("0.0") ||templateNo.equals("0.1") ||templateNo.equals("0.2") 
         || templateNo.equals("5.0") ||templateNo.equals("6.0") || templateNo.equals("7.0") ){
             int amount = 0;
-            String noun = "Amarandi";
+            
             for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
                 if(slotFiller.getKey().equals("value")){
                     amount = Integer.parseInt(slotFiller.getValue());
                 }
             }
-            numContextControl = new NumberContextControl(amount,noun,"e");
-            templateSlots.put("Amount", numContextControl.verbalise());
-            
+            templateSlots.put("Amount", Rules.rule1(amount, "Amarandi"));
         }
        
         //grammar rules that only apply to templates 1.0 and 2.0
@@ -156,7 +167,7 @@ public class TemplateFiller {
             int cat2Amount=0;
             String cat1Value, cat1Name, cat2Value, cat2Name;
             cat1Value = cat1Name = cat2Value = cat2Name ="";
-            String noun = "Amarandi";
+            
             for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
                 if(slotFiller.getKey().equals("category1Value")){
                     cat1Value = slotFiller.getValue();
@@ -179,10 +190,10 @@ public class TemplateFiller {
             
             cat1Amount = Integer.parseInt(cat1Value);
             cat2Amount = Integer.parseInt(cat2Value);
-            numContextControl = new NumberContextControl(cat1Amount,noun,"e");
-            templateSlots.put("Amount1",numContextControl.verbalise());
-            numContextControl = new NumberContextControl(cat2Amount,noun,"e");
-            templateSlots.put("Amount2",numContextControl.verbalise());
+            String noun = "Amarandi";
+
+            templateSlots.put("Amount1",Rules.rule1(cat1Amount, noun));
+            templateSlots.put("Amount2",Rules.rule1(cat2Amount, noun));
             
             if ( templateNo.equals("1.0")){
                 if (cat1Name.equals("luxury")){
@@ -191,10 +202,9 @@ public class TemplateFiller {
                 else{
                     category = "izidingo";
                 }
-                NounClassifier nounclassifier = new NounClassifier(category);
-                NounData nounData = nounclassifier.getNounData();
+            
                 templateSlots.put("Category", category);
-                templateSlots.put("dlule", nounData.getPersonalNoun()+"dlule");
+                templateSlots.put("dlule", Rules.Rule3(category, "dlule"));
             }
             
         }
@@ -209,9 +219,8 @@ public class TemplateFiller {
                 templateSlots.put(slotList[category],subCategories.get(category));    
             }
             String lastSubcategory = subCategories.get(subCatlength);
-            char lastSubCategoryRP = new RelativePronoun(lastSubcategory).getRelativePronoun();
-            String conjunction = "n"+lastSubCategoryRP;
-            templateSlots.put("na",conjunction);
+    
+            templateSlots.put("na",Rules.rule2("na", lastSubcategory));
             templateSlots.put(slotList[subCatlength],lastSubcategory.substring(1));
             
         }
