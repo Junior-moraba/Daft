@@ -20,9 +20,11 @@ public class Lookup {
         ArrayList<String> templates = new ArrayList<String>();
         try{
             FileInputStream fileInputStream =new FileInputStream(new File("/Users/vhulendamoraba/Desktop/Course/Project/DAFT/code/templates.xlsx"));
-            //creating Workbook instanumContextControle that refers to .xlsx file  
+            //creating Workbook
             XSSFWorkbook wb = new XSSFWorkbook(fileInputStream);
             XSSFSheet sheet = wb.getSheetAt(0);     //creating a Sheet object to retrieve object  
+            
+            //this goes by row going through each column
             Iterator<Row> itr = sheet.iterator();    //iterating over excel file 
             int rowNumber = 0;
             while (itr.hasNext()){  
@@ -38,7 +40,12 @@ public class Lookup {
                     }                     
                 }  
                 rowNumber++;
-            }  
+            }
+            //go by column
+            
+            
+                
+        
         }  
         catch(Exception e){  
             e.printStackTrace();  
@@ -46,7 +53,8 @@ public class Lookup {
         testMessages tmessages = new testMessages();
         ArrayList<Message> messages = tmessages.getMessages();
 
-        String current, budget, savings,charges,spent = "";
+        String current, budget, savings,charges,spent;
+        current = budget = savings = charges = spent = ""; //this can be very dangerous
         for (int i=0;i<messages.size();i++){
             Message message = messages.get(i);
             LinkedHashMap<String,String> hashMap = message.getArguments();
@@ -68,14 +76,12 @@ public class Lookup {
             if (message.getRelation().equals("currentAmount")){
                 String noun = "amarandi"; //un, ignored (explain why in paper)
                 current = fillTemplate(templates.get(0),noun,statusValue);
-                System.out.println(current);
+                // System.out.println(current);
             }
             else if (message.getRelation().equals("statusOfBudgets")){
                 if (status.equals("CLOSE-TO-BUDGET")){
                     String noun = "amarandi";
                     budget = fillTemplate(templates.get(1),noun,statusValue);
-
-
                 }
                 else if (status.equals("OVER-BUDGET")){
                     String noun = "amarandi";
@@ -86,9 +92,9 @@ public class Lookup {
                     //nothing special required here, can print "template" as is
                 }
                 else{
-                    budget = "unknown";
+                    budget = "";
                 }
-                System.out.println(budget);
+                // System.out.println(budget);
             }
             else if (message.getRelation().equals("statusOfSavingsBudgets")){
                 if (status.equals("REACHED-SAVINGS-GOAL")){
@@ -106,23 +112,25 @@ public class Lookup {
                 else{
                     savings = "unknown";
                 }
-                System.out.println(savings);
+                // System.out.println(savings);
             }
             else if (message.getRelation().equals("bankCharges")){
                 String noun = "Amarandi";
                 charges = fillTemplate(templates.get(7),noun,statusValue);
-                System.out.println(charges);
+                // System.out.println(charges);
             }
             else if (message.getRelation().equals("mostMoney")){
                 String noun="";
                 spent = fillTemplate(templates.get(8),noun,statusValue);
-                System.out.println(spent);
+                // System.out.println(spent);
             }
             else{
-
+                
             }
-            
         }
+        System.out.println("");
+        String generatedText = String.join(" ",current,charges,spent,budget,savings);
+        System.out.println(generatedText);
     }
 
     public static String fillTemplate (String template,String noun ,String statusValue){
@@ -183,6 +191,42 @@ public class Lookup {
         String filledTemplate = stringSub.replace(template);
         
         return filledTemplate;
+    }
+    //delete or modify after amy clarifies how LinkedHashMap will be filled
+    public ArrayList<String> cleanArguments(String argumentValueString){
+
+        ArrayList<String> values = new ArrayList<String>();
+
+        if (argumentValueString.contains(",")){
+            //2
+            if (argumentValueString.contains(":")){
+                String needs = argumentValueString.split(",")[0];
+                String luxuries = argumentValueString.split(",")[1];
+                int needsCurrentAmount = Integer.parseInt(needs.split(":")[1]);
+                int luxuriesCurrentAmount = Integer.parseInt(luxuries.split(":")[1]);
+                values.add(needs);
+                values.add( Integer.toString(needsCurrentAmount));
+                values.add(luxuries);
+                values.add(Integer.toString(luxuriesCurrentAmount));
+            }
+            else{
+                String[] subCategories = argumentValueString.split(",");
+                int subCatlength = subCategories.length;
+                for (int category=0; category<subCatlength;category++){
+                    values.add(subCategories[category]);
+                }
+            }
+        }
+        else if (argumentValueString.contains(":")){
+            String category = argumentValueString.split(":")[0];
+            String amount = argumentValueString.split(":")[1];
+            values.add(category);
+            values.add(amount);
+        }
+        else{
+            values.add(argumentValueString);
+        }
+        return values;
     }
 
 }  

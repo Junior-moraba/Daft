@@ -15,6 +15,7 @@ public class testMessages {
 
         //Always applicable
         hashBalance.put("CURRENT-AMOUNT-OF-MONEY","132");
+
         Message balanceMessage = new Message("msg1", "currentAmount", hashBalance);
         messages.add(balanceMessage);
         
