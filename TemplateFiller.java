@@ -152,8 +152,8 @@ public class TemplateFiller {
         Map<String, String> templateSlots = new HashMap<String, String>(); 
         int amount, cat1Value ,  cat2Value;
         amount = cat1Value = cat2Value = 0;
-        String  category,  cat1Name, cat2Name;
-        category = cat1Name  = cat2Name ="";
+        String  cat1Name, cat2Name;
+        cat1Name  = cat2Name ="";
         ArrayList<String> subCategories = new ArrayList<String>();
         for (Map.Entry<String,String> slotFiller : slotFillers.entrySet()){
             
@@ -178,12 +178,6 @@ public class TemplateFiller {
             }
         }
         
-        if (cat1Name.equals("luxury")){
-            category = "ukunethezeka";
-        }
-        else{
-            category = "izidingo";
-        }
         
         int subCatlength = subCategories.size()-1;
         if (subCatlength!=-1){
@@ -193,18 +187,35 @@ public class TemplateFiller {
             }
             String lastSubcategory = subCategories.get(subCatlength);
 
+            templateSlots.put("most",Rules.rule1(subCatlength,"izindleko" , "e"));
             templateSlots.put("na",Rules.rule2("na", lastSubcategory));
-            templateSlots.put(slotList[subCatlength],lastSubcategory.substring(1));
+            templateSlots.put(slotList[subCatlength],Rules.Rule4(lastSubcategory));
         }
         
 
-        //the template will only entertain slots which it has and ignore rest
-        templateSlots.put("Amount", Rules.rule1(amount, "Amarandi")); //not always
-        templateSlots.put("Amount1",Rules.rule1(cat1Value, "Amarandi"));
-        templateSlots.put("Amount2",Rules.rule1(cat2Value, "Amarandi"));
+        //the template will only entertain slots which it has and ignore rest, this limits if statements 
+        templateSlots.put("Amount", Rules.rule1(amount, "Amarandi", "e"));  //not always
+        templateSlots.put("Amount1",Rules.rule1(cat1Value, "Amarandi", "e"));
+        templateSlots.put("Amount2",Rules.rule1(cat2Value, "Amarandi", "e"));
 
-        templateSlots.put("Category", category);
-        templateSlots.put("dlule", Rules.Rule3(category, "dlule"));
+        if(templateNo.equals("7.1")){
+            templateSlots.put("Amount", Rules.rule1(amount, "imali", "e"));
+        }
+
+        templateSlots.put("Category", cat1Name);
+        templateSlots.put("za",Rules.rule2("za", cat1Name)); //1.1
+
+        
+        templateSlots.put("za1",Rules.rule2("za", cat1Name)); //2.0
+        templateSlots.put("za2",Rules.rule2("za", cat2Name)); //2.0
+        templateSlots.put("nga",Rules.rule2("nga", cat1Name)); //2.1
+        templateSlots.put("kwa",Rules.rule2("kwa", cat2Name)); //2.1
+        
+        if (templateNo.equals("1.1") || templateNo.equals("2.0")|| templateNo.equals("2.1")){
+            templateSlots.put("Category", Rules.Rule4(cat1Name));
+            templateSlots.put("category2",Rules.Rule4(cat2Name)); 
+        }
+        templateSlots.put("dlule", Rules.Rule3(cat1Name, "dlule")); //1.0
 
         return templateSlots;
     }    

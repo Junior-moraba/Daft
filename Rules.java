@@ -1,10 +1,12 @@
+import java.util.ArrayList;
+
 public class Rules {
     
     static NumberContextControl noContextControl;
     static NounClassifier nounclassifier;
-    public static String rule1(int value, String noun){
+    public static String rule1(int value, String noun, String nounType){
         if (value!=0){
-            noContextControl = new NumberContextControl(value,noun,"e");
+            noContextControl = new NumberContextControl(value,noun,nounType);
             String inContextNumber = noContextControl.verbalise(); 
             return inContextNumber;
         }
@@ -36,7 +38,10 @@ public class Rules {
         else{
             return "";
         }
-       
     }
+    public static String Rule4(String category){
+        return category.substring(1);
+    }
+
 
 }
