@@ -17,7 +17,9 @@ public class TemplateFiller {
         
         ArrayList<Message> messages = MessageCollection.getMessages();
         String generatedText = fillTemplates(messages);
+        System.out.println("======================================================");
         System.out.println(generatedText);
+        System.out.println("======================================================");
         writeToFile(generatedText);
 
     }
