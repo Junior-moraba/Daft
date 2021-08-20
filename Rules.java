@@ -15,15 +15,19 @@ public class Rules {
         }
     }
 
-    public static String rule2(String prefix,String category){
+    public static ArrayList<String> rule2(String prefix,String category){
+        ArrayList<String> prefixNcategory = new ArrayList<String>();
         if (!category.equals("")){
             char categoryRP = new RelativePronoun(category).getRelativePronoun();
             String inContextPrefix = prefix.substring(0,prefix.length()-1) + categoryRP;
 
-            return inContextPrefix;
+            prefixNcategory.add(inContextPrefix);
+            prefixNcategory.add(category.substring(1));
+            
+            return prefixNcategory;
         }
         else{
-            return "";
+            return prefixNcategory;
         }
         //this function could return an arraylist, items being prefix and the concatinated category
     }

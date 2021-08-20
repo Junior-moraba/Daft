@@ -40,6 +40,7 @@ public class MessageCollection {
         // messages.add(budget);
 
         // hashBudget.put("status","NOT-OVER-BUDGET");
+        // hashBudget.put("value","7230");
         // Message budget = new Message("msg2", "statusOfBudgets", hashBudget);
         // messages.add(budget);
 
@@ -49,15 +50,15 @@ public class MessageCollection {
         // Message saving = new Message("msg3", "statusOfSavingsBudgets", hashSaving);
         // messages.add(saving);
         
-        hashSaving.put("status","REACHED-SAVINGS-GOAL");
-        hashSaving.put("value","2700");
-        Message saving = new Message("msg3", "statusOfSavingsBudgets", hashSaving);
-        messages.add(saving);
-
-        // hashSaving.put("status","NOT-REACHED-SAVINGS-GOAL");
-        // hashSaving.put("value","402");
+        // hashSaving.put("status","REACHED-SAVINGS-GOAL");
+        // hashSaving.put("value","2700");
         // Message saving = new Message("msg3", "statusOfSavingsBudgets", hashSaving);
         // messages.add(saving);
+
+        hashSaving.put("status","NOT-REACHED-SAVINGS-GOAL");
+        hashSaving.put("value","402");
+        Message saving = new Message("msg3", "statusOfSavingsBudgets", hashSaving);
+        messages.add(saving);
         
         
         //Always applicable

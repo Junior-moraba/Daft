@@ -64,13 +64,14 @@ public class Templates {
                                 budgetMetTemplates.add(cell.getStringCellValue());
                             }
                             else if(cellIndex==4){
-                                savingsMetTemplates.add(cell.getStringCellValue());
+                                savingsBelowTemplates.add(cell.getStringCellValue());
                             }
                             else if(cellIndex==5){
                                 savingsOverTemplates.add(cell.getStringCellValue());
                             }
                             else if(cellIndex==6){
-                                savingsBelowTemplates.add(cell.getStringCellValue());
+                                
+                                savingsMetTemplates.add(cell.getStringCellValue());
                             }
                             else if(cellIndex==7){
                                 chargesTemplates.add(cell.getStringCellValue());
