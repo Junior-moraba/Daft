@@ -20,7 +20,7 @@ public class Rules {
         if (!category.equals("")){
             char categoryRP = new RelativePronoun(category).getRelativePronoun();
             String inContextPrefix = prefix.substring(0,prefix.length()-1) + categoryRP;
-
+            
             prefixNcategory.add(inContextPrefix);
             prefixNcategory.add(category.substring(1));
             

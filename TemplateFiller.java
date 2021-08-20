@@ -132,69 +132,128 @@ public class TemplateFiller {
         String[] templateText = template.split(" "); 
         Map<String, String> templateSlots = new HashMap<String, String>(); 
 
-        // System.out.println(slotFillers.entrySet());
-        String word, slotInformation,slotInformation2;
+        String word, slotInformation;
         int indexOfClosinBracket;
         int valNumber =1;
+        ArrayList<String> cleanSlotData = new ArrayList<String>(); //use a map
 
         for (int position=0;position<templateText.length;position++){
             word = templateText[position];
             if(word.startsWith("${")){
-                indexOfClosinBracket = word.indexOf("}");
+                indexOfClosinBracket = word.lastIndexOf("}");                
                 slotInformation = word.substring(2, indexOfClosinBracket);
+                cleanSlotData = cleanTemplateSlot(slotInformation);
 
-                if(StringUtils.countMatches(word, "$") ==2){
-                    //Prefix + Category
-                    //apply rule 2
-
-                    slotInformation2 = word.substring(word.lastIndexOf("$")+2,word.lastIndexOf("}"));
-                    ArrayList<String> result;
-
-                    if(slotFillers.containsKey(slotInformation2.toLowerCase()+"Name")){ //find a way of ignoring case sensitivity
-                        result = Rules.rule2(slotInformation,  slotFillers.get(slotInformation2.toLowerCase()+"Name"));
-                    }
-                    else{
-                        result = Rules.rule2(slotInformation,  slotFillers.get(slotInformation2));
-                    }
-                    templateSlots.put(slotInformation, result.get(0));
-                    templateSlots.put(slotInformation2, result.get(1));
-                    
-                }
-                else{
-                    if(StringUtils.countMatches(slotInformation, ":") ==1){
-                        //The case where we have an amount and the noun it describes
-                        //Apply rule 1 
-                        String[] AmountText = slotInformation.split(":");
-                        String result;
-                        if (slotFillers.containsKey("value")){
-                            result = Rules.rule1( Integer.parseInt(slotFillers.get("value")), AmountText[1], "e");
-                        }
-                        else{
-                            result = Rules.rule1( Integer.parseInt(slotFillers.get("category"+Integer.toString(valNumber)+"Value")), AmountText[1], "e");
-                        }                        
-                        templateSlots.put(slotInformation, result);
-
+                if(cleanSlotData.get(0).equals("1")){
+                    if (cleanSlotData.get(1).startsWith("subCategory")){
+                        templateSlots.put(cleanSlotData.get(1), slotFillers.get(slotInformation));
                     }
                     else if( position> 2 && templateText[position-1].contains("Category") && !templateText[position-1].contains("subCategory")){
                         //the case where there is an adjective qualifies category
-                        //Apply rule 3
                         String categoryPrev = templateText[position-1].substring( templateText[position-1].lastIndexOf("{")+1, templateText[position-1].lastIndexOf("}")).toLowerCase();
                         String result = Rules.Rule3(slotFillers.get(categoryPrev+"Name") , slotInformation);
-                        templateSlots.put(slotInformation, result);
+                        templateSlots.put(cleanSlotData.get(1), result);
                     }
                     else{
-                        if (slotInformation.startsWith("subCategory")){
-                            templateSlots.put(slotInformation, slotFillers.get(slotInformation));
-                        }
-                        else{
-                            templateSlots.put(slotInformation, slotFillers.get(slotInformation.toLowerCase()+"Name"));
-                        }
+                        templateSlots.put(cleanSlotData.get(1), slotFillers.get(cleanSlotData.get(1).toLowerCase()+"Name"));
                     }
-                }       
+                }
+                else if(cleanSlotData.get(0).equals("2")){
+                    
+                    String result;
+                    if (slotFillers.containsKey("value")){
+                        result = Rules.rule1( Integer.parseInt(slotFillers.get("value")), cleanSlotData.get(2), "e");
+                    }
+                    else{
+                        result = Rules.rule1(Integer.parseInt(slotFillers.get("category"+Integer.toString(valNumber)+"Value")), cleanSlotData.get(2), "e");
+                    }                        
+                    templateSlots.put(cleanSlotData.get(1)+":"+cleanSlotData.get(2), result); //deal with slotInformation
+                }
+                else if(cleanSlotData.get(0).equals("3.1") ){
+                    ArrayList<String> result;
+                    if(slotFillers.containsKey(cleanSlotData.get(2).toLowerCase()+"Name")){ 
+                        //find a way of ignoring case sensitivity
+                        result = Rules.rule2(cleanSlotData.get(1).substring(0,cleanSlotData.get(1).length()-1),  slotFillers.get(cleanSlotData.get(2).toLowerCase()+"Name"));
+                    }
+                    else{
+                        result = Rules.rule2(cleanSlotData.get(1).substring(0,cleanSlotData.get(1).length()-1),  slotFillers.get(cleanSlotData.get(2)));
+                    }                   
+                    templateSlots.put(cleanSlotData.get(1), result.get(0));
+                    templateSlots.put(cleanSlotData.get(2), result.get(1));
+                }
+                else if(cleanSlotData.get(0).equals("3.2")){
+                    String valueAsString;
+                    ArrayList<String>  result2;
+                    
+                    if (slotFillers.containsKey("value")){
+                        valueAsString = Rules.rule1( Integer.parseInt(slotFillers.get("value")), cleanSlotData.get(3), "e");
+                    }
+                    else{
+                        valueAsString = Rules.rule1(Integer.parseInt(slotFillers.get("category"+Integer.toString(valNumber)+"Value")), cleanSlotData.get(3), "e");
+                    }
+                    result2 = Rules.rule2(cleanSlotData.get(1).substring(0,cleanSlotData.get(1).length()-1), valueAsString);
+                    templateSlots.put(cleanSlotData.get(1), result2.get(0));
+                    templateSlots.put(cleanSlotData.get(2), result2.get(1));
+                }
             }
         }
         return templateSlots;
+    }
 
+    public static ArrayList<String>  cleanTemplateSlot(String templateSlot){
+        boolean scenario3_2 = false;
+        String templateSlot2 = "";
+        ArrayList<String> slotData = new ArrayList<String>();
+
+        if(StringUtils.countMatches(templateSlot, "$") ==1){
+            /**
+             * Scenario3.1 is when a category has a prefix attached to it, therefore templateSlot2 ==category
+             * Scenario3.2 is when a number has a prefix attached to it, therefore templateSlot2 == number
+             * return the Prefix
+            */ 
+            String prefix = templateSlot.substring(0, templateSlot.indexOf("}"));
+            templateSlot2 = templateSlot.substring(templateSlot.indexOf("{")+1,templateSlot.length());
+            System.out.println(templateSlot2+"======");
+
+            if (StringUtils.countMatches(templateSlot2, ":") ==1){
+                scenario3_2 = true;
+                slotData.add("3.2");
+                slotData.add(prefix);
+            }
+            else{
+                slotData.add("3.1");
+                slotData.add(prefix);
+                slotData.add(templateSlot2);       
+            }
+        }
+        if (StringUtils.countMatches(templateSlot, ":") == 1 || scenario3_2){
+            /**
+             * scenario 2
+             * here a slot has a number and noun being qualified by that number
+             * Qualifier : Object being Qualified
+             * return the Qualifier and the object being qualified
+             */
+            String[] AmountText;
+            if(scenario3_2){
+                AmountText = templateSlot2.split(":");
+                slotData.add(AmountText[0]);
+                slotData.add(AmountText[1]);   
+                // slotData.add(e)
+                
+                //No need to add that its scenario 3.2
+            }
+            else{
+                AmountText = templateSlot.split(":");
+                slotData.add("2");
+                slotData.add(AmountText[0]);
+                slotData.add(AmountText[1]);    
+            }   
+        }
+        if (slotData.size()==0){
+            slotData.add("1");
+            slotData.add(templateSlot);
+        }
+        return slotData;
     }
 }
         
