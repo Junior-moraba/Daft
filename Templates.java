@@ -17,6 +17,14 @@ public class Templates {
     static ArrayList<String> savingsBelowTemplates = new ArrayList<String>();
     static ArrayList<String> chargesTemplates = new ArrayList<String>();
     static ArrayList<String> spentTemplates = new ArrayList<String>();
+    static ArrayList<String> periodTemplates = new ArrayList<String>();
+    static ArrayList<String> percentagesTemplates = new ArrayList<String>();
+    static ArrayList<String> percentValuesTemplates = new ArrayList<String>();
+    static ArrayList<String> noTransactionsTemplates = new ArrayList<String>();
+    static ArrayList<String> categoryBudgetOver1Templates = new ArrayList<String>();
+    static ArrayList<String> categoryBudgetOver2Templates = new ArrayList<String>();
+    static ArrayList<String> categoryBudgetNotOverTemplates = new ArrayList<String>();
+
 
     public Templates(){
         getTemplates();
@@ -78,6 +86,27 @@ public class Templates {
                             }
                             else if(cellIndex==8){
                                 spentTemplates.add(cell.getStringCellValue());
+                            }
+                            else if (cellIndex==9){
+                                periodTemplates.add(cell.getStringCellValue());
+                            }
+                            else if(cellIndex==10){
+                                percentagesTemplates.add(cell.getStringCellValue());
+                            }
+                            else if(cellIndex==11){
+                                percentValuesTemplates.add(cell.getStringCellValue());
+                            }
+                            else if(cellIndex==12){
+                                noTransactionsTemplates.add(cell.getStringCellValue());
+                            }
+                            else if(cellIndex==13){
+                                categoryBudgetOver1Templates.add(cell.getStringCellValue());
+                            }
+                            else if(cellIndex==14){
+                                categoryBudgetOver2Templates.add(cell.getStringCellValue());
+                            }
+                            else if(cellIndex==15){
+                                categoryBudgetNotOverTemplates.add(cell.getStringCellValue());
                             }
                             else{
                                 continue;

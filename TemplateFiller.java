@@ -12,8 +12,9 @@ import org.apache.commons.text.StringSubstitutor;
 public class TemplateFiller {
     
     static ArrayList<String> messageStatus = new ArrayList<String>();
-    static ArrayList<String> messageValues = new ArrayList<String>();
+    static ArrayList<String> messageValues = new ArrayList<String>();    
     static Templates templates = new Templates();
+    static String[] months = {"Januwari","Februwari","Mashi","Apreli","Meyi","Juni","Julayi","Agasti","Septemba","Oktoba","Novemba","Disemba"};
     public static void main(String[] args){
         
         
@@ -68,6 +69,34 @@ public class TemplateFiller {
         else if  (message.equals("REACHED-SAVINGS-GOAL")){
             randomInt = random.nextInt(Templates.savingsMetTemplates.size());
             template = Templates.savingsMetTemplates.get(randomInt);
+        }
+        else if (message.equals("BUDGET-PERIOD")){
+            randomInt = random.nextInt(Templates.periodTemplates.size());
+            template = Templates.periodTemplates.get(randomInt);
+        }
+        else if (message.equals("BUDGET-PERCENTAGE")){
+            randomInt = random.nextInt(Templates.percentagesTemplates.size());
+            template = Templates.percentagesTemplates.get(randomInt);
+        }
+        else if (message.equals("BUDGET-PERCENTAGE-VALUES")){
+            randomInt = random.nextInt(Templates.percentValuesTemplates.size());
+            template = Templates.percentValuesTemplates.get(randomInt);
+        }
+        else if(message.equals("NUMBER-OF-TRANSACTIONS")){
+            randomInt = random.nextInt(Templates.noTransactionsTemplates.size());
+            template = Templates.noTransactionsTemplates.get(randomInt);
+        }
+        else if(message.equals("OVER-BUDGET-CATEGORY-1")){
+            randomInt = random.nextInt(Templates.categoryBudgetOver1Templates.size());
+            template = Templates.categoryBudgetOver1Templates.get(randomInt);
+        }
+        else if(message.equals("OVER-BUDGET-CATEGORY-2")){
+            randomInt = random.nextInt(Templates.categoryBudgetOver2Templates.size());
+            template = Templates.categoryBudgetOver2Templates.get(randomInt);
+        }
+        else if(message.equals("NOT-OVER-BUDGET-CATEGORY")){
+            randomInt = random.nextInt(Templates.categoryBudgetNotOverTemplates.size());
+            template = Templates.categoryBudgetNotOverTemplates.get(randomInt);
         }
         else 
         {
@@ -127,83 +156,129 @@ public class TemplateFiller {
         }
 
     }
+    
     public static  Map<String, String> applyGrammarRules(String template,Map<String,String> slotFillers){
 
         String[] templateText = template.split(" "); 
+        System.out.println(template);
         Map<String, String> templateSlots = new HashMap<String, String>(); 
 
-        String word, slotInformation;
+        String word, slotInformation, day, month;
         int indexOfClosinBracket;
-        int valNumber =1;
-        ArrayList<String> cleanSlotData = new ArrayList<String>(); //use a map
+        
+        Map<String,String> slotDataMap = new HashMap<String,String>();
 
         for (int position=0;position<templateText.length;position++){
             word = templateText[position];
             if(word.startsWith("${")){
                 indexOfClosinBracket = word.lastIndexOf("}");                
                 slotInformation = word.substring(2, indexOfClosinBracket);
-                cleanSlotData = cleanTemplateSlot(slotInformation);
+                
+                slotDataMap = cleanTemplateSlot(slotInformation);
 
-                if(cleanSlotData.get(0).equals("1")){
-                    if (cleanSlotData.get(1).startsWith("subCategory")){
-                        templateSlots.put(cleanSlotData.get(1), slotFillers.get(slotInformation));
+                if (slotDataMap.get("Type").equals("1")){
+                    String slotDataString = slotDataMap.get("slotData");
+                    if (slotDataString.startsWith("subCategory")){
+                        templateSlots.put(slotDataString, slotFillers.get(slotInformation));
+                    }
+                    else if(slotDataString.startsWith("Month")){
+                        //choose the right month la
                     }
                     else if( position> 2 && templateText[position-1].contains("Category") && !templateText[position-1].contains("subCategory")){
                         //the case where there is an adjective qualifies category
                         String categoryPrev = templateText[position-1].substring( templateText[position-1].lastIndexOf("{")+1, templateText[position-1].lastIndexOf("}")).toLowerCase();
                         String result = Rules.Rule3(slotFillers.get(categoryPrev+"Name") , slotInformation);
-                        templateSlots.put(cleanSlotData.get(1), result);
+                        templateSlots.put(slotDataString, result);
                     }
                     else{
-                        templateSlots.put(cleanSlotData.get(1), slotFillers.get(cleanSlotData.get(1).toLowerCase()+"Name"));
+                        templateSlots.put(slotDataString, slotFillers.get(slotDataString.toLowerCase()+"Name"));
                     }
                 }
-                else if(cleanSlotData.get(0).equals("2")){
-                    
+                else if (slotDataMap.get("Type").equals("2")){
                     String result;
-                    if (slotFillers.containsKey("value")){
-                        result = Rules.rule1( Integer.parseInt(slotFillers.get("value")), cleanSlotData.get(2), "e");
+                    String noun = slotDataMap.get("Noun");
+                    String qualifier = slotDataMap.get("Qualifier");
+                    String qualifierNo = qualifier.substring(qualifier.length()-1);
+                    if (qualifier.startsWith("Amount")){                        
+                        if (slotFillers.containsKey("value")){
+                            result = Rules.rule1( Integer.parseInt(slotFillers.get("value")), noun, "e");
+                        }
+                        else{
+                            result = Rules.rule1(Integer.parseInt(slotFillers.get("category"+qualifierNo+"Value")), noun, "e");
+                        }
+                    }
+                    else if (qualifier.startsWith("subCatNo")){
+                        result = Rules.rule1( Integer.parseInt(slotFillers.get("numberSubCategories")), noun, "e");
+                    }
+                    else if (qualifier.startsWith("Day")){
+                        //get day from the date OR/AND the month
+                        day = slotFillers.get("Date"+qualifierNo).split("-")[0];
+                        result = Rules.rule1(Integer.parseInt(day), noun, "o");
+                        
                     }
                     else{
-                        result = Rules.rule1(Integer.parseInt(slotFillers.get("category"+Integer.toString(valNumber)+"Value")), cleanSlotData.get(2), "e");
-                    }                        
-                    templateSlots.put(cleanSlotData.get(1)+":"+cleanSlotData.get(2), result); //deal with slotInformation
+                        result = "";
+                    }
+                                         
+                    templateSlots.put(qualifier+":"+noun, result); 
+                    
                 }
-                else if(cleanSlotData.get(0).equals("3.1") ){
+                else if (slotDataMap.get("Type").equals("3.1")){
                     ArrayList<String> result;
-                    if(slotFillers.containsKey(cleanSlotData.get(2).toLowerCase()+"Name")){ 
-                        //find a way of ignoring case sensitivity
-                        result = Rules.rule2(cleanSlotData.get(1).substring(0,cleanSlotData.get(1).length()-1),  slotFillers.get(cleanSlotData.get(2).toLowerCase()+"Name"));
+                    String prefix = slotDataMap.get("prefix");
+                    String category = slotDataMap.get("category");
+                    //if(slotFillers.containsKey(category.toLowerCase()+"Name")){ 
+                    if(category.startsWith("Month")){
+                        String dateNo = category.substring(category.length()-1);
+                        month = slotFillers.get("Date"+dateNo).split("-")[1];
+                        month = months[Integer.parseInt(month)-1];
+                        result = new ArrayList<String>();
+                        result.add(prefix.substring(0,prefix.length()-1));
+                        result.add(month);
+                        
                     }
                     else{
-                        result = Rules.rule2(cleanSlotData.get(1).substring(0,cleanSlotData.get(1).length()-1),  slotFillers.get(cleanSlotData.get(2)));
-                    }                   
-                    templateSlots.put(cleanSlotData.get(1), result.get(0));
-                    templateSlots.put(cleanSlotData.get(2), result.get(1));
+                        if (category.startsWith("Category")){
+                            //find a way of ignoring case sensitivity
+                            result = Rules.rule2(prefix.substring(0,prefix.length()-1),  slotFillers.get(category.toLowerCase()+"Name"));
+                        }
+                        else{
+                            //startswith subcategory
+                            result = Rules.rule2(prefix.substring(0,prefix.length()-1),  slotFillers.get(category));
+                        }
+                    }
+                    templateSlots.put(prefix, result.get(0));
+                    templateSlots.put(category, result.get(1));          
                 }
-                else if(cleanSlotData.get(0).equals("3.2")){
+                else if (slotDataMap.get("Type").equals("3.2")){
                     String valueAsString;
-                    ArrayList<String>  result2;
+                    String prefix = slotDataMap.get("prefix");
+                    String noun = slotDataMap.get("Noun");
+                    String qualifier = slotDataMap.get("Qualifier");
+                    String qualifierNo = qualifier.substring(qualifier.length()-1);
+                    ArrayList<String>  result;
                     
                     if (slotFillers.containsKey("value")){
-                        valueAsString = Rules.rule1( Integer.parseInt(slotFillers.get("value")), cleanSlotData.get(3), "e");
+                        valueAsString = Rules.rule1( Integer.parseInt(slotFillers.get("value")), noun, "e");
                     }
                     else{
-                        valueAsString = Rules.rule1(Integer.parseInt(slotFillers.get("category"+Integer.toString(valNumber)+"Value")), cleanSlotData.get(3), "e");
+                        valueAsString = Rules.rule1(Integer.parseInt(slotFillers.get("category"+qualifierNo+"Value")), noun, "e");
                     }
-                    result2 = Rules.rule2(cleanSlotData.get(1).substring(0,cleanSlotData.get(1).length()-1), valueAsString);
-                    templateSlots.put(cleanSlotData.get(1), result2.get(0));
-                    templateSlots.put(cleanSlotData.get(2), result2.get(1));
+                    result = Rules.rule2(prefix.substring(0,prefix.length()-1), valueAsString);
+                    templateSlots.put(prefix, result.get(0));
+                    templateSlots.put(qualifier+":"+noun, result.get(1)); 
+                   
+                   
                 }
             }
         }
         return templateSlots;
     }
 
-    public static ArrayList<String>  cleanTemplateSlot(String templateSlot){
+    public static Map<String,String>  cleanTemplateSlot(String templateSlot){
         boolean scenario3_2 = false;
         String templateSlot2 = "";
-        ArrayList<String> slotData = new ArrayList<String>();
+        Map<String, String> slotInformation = new HashMap<String,String>();
 
         if(StringUtils.countMatches(templateSlot, "$") ==1){
             /**
@@ -213,17 +288,16 @@ public class TemplateFiller {
             */ 
             String prefix = templateSlot.substring(0, templateSlot.indexOf("}"));
             templateSlot2 = templateSlot.substring(templateSlot.indexOf("{")+1,templateSlot.length());
-            System.out.println(templateSlot2+"======");
 
             if (StringUtils.countMatches(templateSlot2, ":") ==1){
                 scenario3_2 = true;
-                slotData.add("3.2");
-                slotData.add(prefix);
+                slotInformation.put("Type","3.2");
+                slotInformation.put("prefix",prefix);
             }
             else{
-                slotData.add("3.1");
-                slotData.add(prefix);
-                slotData.add(templateSlot2);       
+                slotInformation.put("Type","3.1");
+                slotInformation.put("prefix",prefix);
+                slotInformation.put("category",templateSlot2);
             }
         }
         if (StringUtils.countMatches(templateSlot, ":") == 1 || scenario3_2){
@@ -236,24 +310,29 @@ public class TemplateFiller {
             String[] AmountText;
             if(scenario3_2){
                 AmountText = templateSlot2.split(":");
-                slotData.add(AmountText[0]);
-                slotData.add(AmountText[1]);   
-                // slotData.add(e)
+                slotInformation.put("Qualifier",AmountText[0]);
+                slotInformation.put("Noun",AmountText[1]);
                 
-                //No need to add that its scenario 3.2
             }
             else{
                 AmountText = templateSlot.split(":");
-                slotData.add("2");
-                slotData.add(AmountText[0]);
-                slotData.add(AmountText[1]);    
+                slotInformation.put("Type","2");
+                slotInformation.put("Qualifier",AmountText[0]);
+                slotInformation.put("Noun",AmountText[1]);
             }   
         }
-        if (slotData.size()==0){
-            slotData.add("1");
-            slotData.add(templateSlot);
+        if (slotInformation.size()==0){
+            slotInformation.put("Type","1");
+            slotInformation.put("slotData",templateSlot);
         }
-        return slotData;
+        return slotInformation;
     }
+    /**
+     * Three possible scenarios
+     * ${S} == S
+     * ${S:N} ==  S:N 
+     * ${S}${S} = S,S
+     * ${S}${S:N} = S, S:N
+     */ 
 }
         

@@ -29,7 +29,6 @@ public class Rules {
         else{
             return prefixNcategory;
         }
-        //this function could return an arraylist, items being prefix and the concatinated category
     }
     public static String Rule3(String category,String immediateAdjective){
         if (!category.equals("")){
@@ -43,9 +42,10 @@ public class Rules {
             return "";
         }
     }
-    public static String Rule4(String category){
-        return category.substring(1);
-    }
+    // public static String Rule4(String category){
+        // this rule should be responsible for choosing whether to use 
+        // izidingo or ukudingeka depending on the prefix
+    // }
 
 
 }
