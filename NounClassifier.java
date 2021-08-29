@@ -89,7 +89,7 @@ public class NounClassifier {
         }
         else if(userNoun.substring(0, 3).equals("isi")){
             // class 4 : Singular
-            resultNoun = new NounData(4, userNoun.substring(0, 2),"i",true);
+            resultNoun = new NounData(4, userNoun.substring(0, 2),"si",true);
         }
         else {
             /**
