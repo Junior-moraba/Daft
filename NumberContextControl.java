@@ -194,16 +194,10 @@ public class NumberContextControl {
         numberAsString = numberAsString.substring(1);
         /**
          * Rule 5
-         * Noun classs 6 and 8 add a special prefix 'w' between relative and personal pronoun
-         * No special rules for the rest, just choose correct prefix option, and add the relative pronoun... 
-         * to that prefixOption to form the prefix of the overall number
+         * Choose correct prefix option, and add the relative pronoun to that prefixOption to form the prefix of the overall number
          */
-        if (nounClass==6 || nounClass==8){
-        prefix = prefixOptions[nounClass-1] + "w" + relPronoun.getRelativePronoun();
-        }
-        else{
+
         prefix = prefixOptions[nounClass-1] + relPronoun.getRelativePronoun();
-        }
 
         finalNumber = String.join("", prefix,numberAsString);
         return finalNumber; 
