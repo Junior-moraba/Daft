@@ -98,6 +98,14 @@ public class NumberContextControl {
         }
         /**
          * Rule 4
+         * ne prefixes "mu" or "mi" or "ma" when qualifying noun beginning with "Umu", "imi" or "ama".
+         * 
+         */
+        else if ((prefix.equals("ama") || prefix.equals("imi") || prefix.equals("umu")) && (numberAsString.equals("ne") )){
+            specialPrefix = prefix.substring(1); //remove the first letter
+        }
+        /**
+         * Rule 5
          * From observation
          * If numberAsString starts with i, prefix y after the pronoun
          */
@@ -105,7 +113,7 @@ public class NumberContextControl {
             specialPrefix = "y";
         }
         /**
-         * Rule 5
+         * Rule 6
         * Also from observation
         * If numberAsString starts with a, prefix ng after the pronoun
         */
@@ -114,7 +122,7 @@ public class NumberContextControl {
         }
 
         /**
-         * Rule 6
+         * Rule 7
          * Indefinite adjectives
          * used to describe a noun in a non-specific sense
          * odwa vs nye, odwa often used for single objects in each class with slight variations for that class
