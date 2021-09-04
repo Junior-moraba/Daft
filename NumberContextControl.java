@@ -84,7 +84,7 @@ public class NumberContextControl {
         }
         /**
          * Rule 2
-         * Bili prefixOptions “m” after the pronoun “zi” and the conjunction “na”
+         * Bili prefixes “m” after the pronoun “zi” and the conjunction “na”
          */
         else if (numberAsString.equals("bili") && pNoun.equals("zi")){
             specialPrefix = "m";
@@ -131,14 +131,14 @@ public class NumberContextControl {
          *          eg abantu abanye == other people
          *          not sure if this holds for all cases though
          */
-        String[] prefixOptions = {"y","l","y","s","w","l","b","k"};
+        String[] possessiveParticles = {"y","l","y","s","w","l","b","k"};
         if (number==1 && nounData.singularity){
             if(nounClass==1){
                 //class 1, uses an e instead of o to combine the innerprefix and the 'dwa'
-                numberAsString = prefixOptions[nounClass-1] + "e" + "dwa";
+                numberAsString = possessiveParticles[nounClass-1] + "e" + "dwa";
             }
             else{
-                numberAsString = prefixOptions[nounClass-1] + "o" + "dwa";
+                numberAsString = possessiveParticles[nounClass-1] + "o" + "dwa";
             }
         }
 
@@ -167,12 +167,12 @@ public class NumberContextControl {
 
         //assumptions, (not based on any literature) ordinals only work for singular words. CONFIRM
         
-        String prefix;
+        String possessiveParticle;
         String finalNumber;
         int nounClass = nounData.nClass;
 
-        String[] prefixOptions = {"w","l","y","s","w","l","b","k"};
-        
+        String[] possesiveParticles = {"w","l","y","s","w","lw","b","kw"};
+              
 
         /**
          * Rule 1
@@ -190,7 +190,9 @@ public class NumberContextControl {
         } 
         /**
          * Rule 3
-         * get the relative pronoun using the number as a noun ***weird***
+         * get the relative pronoun using the number as a noun.
+         * Why are we not sending the both possesive and the number, by default class relative pronoun
+         * assumes final vowel is a which is the case here.
         */
         RelativePronoun relPronoun = new RelativePronoun(numberAsString);
         /**
@@ -205,9 +207,9 @@ public class NumberContextControl {
          * Choose correct prefix option, and add the relative pronoun to that prefixOption to form the prefix of the overall number
          */
 
-        prefix = prefixOptions[nounClass-1] + relPronoun.getRelativePronoun();
+        possessiveParticle = possesiveParticles[nounClass-1] + relPronoun.getRelativePronoun();
 
-        finalNumber = String.join("", prefix,numberAsString);
+        finalNumber = String.join("", possessiveParticle,numberAsString);
         return finalNumber; 
 
     }
