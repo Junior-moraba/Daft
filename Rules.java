@@ -42,10 +42,33 @@ public class Rules {
             return "";
         }
     }
-    // public static String Rule4(String category){
+    public static ArrayList<String> Rule4(String prefix,String category){
+        ArrayList<String> prefixNcategory = new ArrayList<String>();
         // this rule should be responsible for choosing whether to use 
         // izidingo or ukudingeka depending on the prefix
-    // }
+
+        if (prefix.equals("za")){
+            //use ukudingeka
+            category = "ukudingeka";
+        }
+        else if(prefix.equals("ka")){
+            //use izidingo
+            category = "izidingo";
+        }
+        char categoryRP = new RelativePronoun(category).getRelativePronoun();
+        String inContextPrefix = prefix.substring(0,prefix.length()-1) + categoryRP;
+            
+        prefixNcategory.add(inContextPrefix);
+        prefixNcategory.add(category.substring(1));
+
+        return prefixNcategory;
+    }
+    public static String Rule5(String prefix,String category){
+        //use the appropriate version of kwa
+
+        return category;
+    }
+
 
 
 }

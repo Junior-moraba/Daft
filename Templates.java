@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;  
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Templates {
     static ArrayList<String> balanceTemplates = new ArrayList<String>();
@@ -27,7 +28,6 @@ public class Templates {
 
 
     public Templates(){
-        getTemplates();
     }
 
     
@@ -78,7 +78,6 @@ public class Templates {
                                 savingsOverTemplates.add(cell.getStringCellValue());
                             }
                             else if(cellIndex==6){
-                                
                                 savingsMetTemplates.add(cell.getStringCellValue());
                             }
                             else if(cellIndex==7){
@@ -123,8 +122,83 @@ public class Templates {
             e.printStackTrace();  
         }
     }
-    // public static  selectAppropriateTemplates(ArrayList<String> messages){
+    public static String selectAppropriateTemplate( String message){
 
-    // }
+        Random random = new Random();
+        int randomInt = 0;
+        String template="";
+        
+        if  (message.equals("currentAmount")){
+            
+            randomInt = random.nextInt(Templates.balanceTemplates.size());
+            template = Templates.balanceTemplates.get(randomInt);
+        }
+        else if  (message.equals("bankCharges")){
+            randomInt = random.nextInt(Templates.chargesTemplates.size());
+            template = Templates.chargesTemplates.get(randomInt);
+        }
+        else if  (message.equals("mostMoney")){
+            randomInt = random.nextInt(Templates.spentTemplates.size());
+            template = Templates.spentTemplates.get(randomInt);
+        }   
+        else if  (message.equals("CLOSE-TO-BUDGET")){ //status
+            randomInt = random.nextInt(Templates.budgetCloseTemplates.size());
+            template = Templates.budgetCloseTemplates.get(randomInt);  
+        }   
+        else if  (message.equals("NOT-OVER-BUDGET")){//status
+            randomInt = random.nextInt(Templates.budgetMetTemplates.size());
+            template = Templates.budgetMetTemplates.get(randomInt);
+        }   
+        else if  (message.equals("OVER-BUDGET")){//status
+            randomInt = random.nextInt(Templates.budgetOverTemplates.size());
+            template = Templates.budgetOverTemplates.get(randomInt);
+        }    
+        else if  (message.equals("NOT-REACHED-SAVINGS-GOAL")){//status
+            randomInt = random.nextInt(Templates.savingsBelowTemplates.size());
+            template = Templates.savingsBelowTemplates.get(randomInt); 
+        }    
+        else if  (message.equals("OVER-SAVING")){//status
+            randomInt = random.nextInt(Templates.savingsOverTemplates.size());
+            template = Templates.savingsOverTemplates.get(randomInt); 
+        }
+        else if  (message.equals("REACHED-SAVINGS-GOAL")){//status
+            randomInt = random.nextInt(Templates.savingsMetTemplates.size());
+            template = Templates.savingsMetTemplates.get(randomInt);
+        }
+        else if (message.equals("budgetPeriod")){
+            randomInt = random.nextInt(Templates.periodTemplates.size());
+            template = Templates.periodTemplates.get(randomInt);
+        }
+        else if (message.equals("budgetPercentages")){
+            randomInt = random.nextInt(Templates.percentagesTemplates.size());
+            template = Templates.percentagesTemplates.get(randomInt);
+        }
+        else if (message.equals("budgetValues")){
+            randomInt = random.nextInt(Templates.percentValuesTemplates.size());
+            template = Templates.percentValuesTemplates.get(randomInt);
+        }
+        else if(message.equals("numTransactions")){
+            randomInt = random.nextInt(Templates.noTransactionsTemplates.size());
+            template = Templates.noTransactionsTemplates.get(randomInt);
+        }
+        else if(message.equals("OVER-BUDGET-CATEGORY-1")){ //status
+            randomInt = random.nextInt(Templates.categoryBudgetOver1Templates.size());
+            template = Templates.categoryBudgetOver1Templates.get(randomInt);
+        }
+        else if(message.equals("OVER-BUDGET-CATEGORY-2")){ //status
+            randomInt = random.nextInt(Templates.categoryBudgetOver2Templates.size());
+            template = Templates.categoryBudgetOver2Templates.get(randomInt);
+        }
+        else if(message.equals("NOT-OVER-BUDGET-CATEGORY")){ //status
+            randomInt = random.nextInt(Templates.categoryBudgetNotOverTemplates.size());
+            template = Templates.categoryBudgetNotOverTemplates.get(randomInt);
+        }
+        else 
+        {
+            template = ""; 
+        }
+        return template;
+    }
+    
     
 }

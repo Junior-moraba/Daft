@@ -113,11 +113,11 @@ public class NumberContextControl {
             specialPrefix = "y";
         }
         /**
-         * Rule 6
+        * Rule 6
         * Also from observation
-        * If numberAsString starts with a, prefix ng after the pronoun
+        * If number starts with a and the relative noun is an e
         */
-        else if (numberAsString.charAt(0)=='a'){
+        else if (numberAsString.charAt(0)=='a' && relNoun =='e'){
             specialPrefix = "ng";
         }
 
@@ -152,6 +152,9 @@ public class NumberContextControl {
         }else{
             //discard pronoun
             finalnumber = String.join("",Character.toString(relNoun),specialPrefix,numberAsString);
+            if (numberAsString.charAt(0)=='a' && relNoun=='a'){
+                finalnumber = String.join("",specialPrefix,numberAsString);
+            }
         }
 
         return finalnumber;

@@ -1,12 +1,35 @@
 # Daft
-## How to run code
+
+## Generating summaries NLG
+- create instance of NLG class
+-   NLG nlg = new NLG();
+- call method generate summary to create a summary
+- with message as argument; returns a message as string
+-   nlg.generateSummary(message);
+
+### Example of generating a summaries (delete)
+- In NLG.java
+- Main method gets messages from message collection (other messages commented out, uncomment message to generate summary about it)
+- sends them to the sentence planner
+- sends sentence plan to the linguistic realiser
+- prints the generated text 
+
+#### Things to discuss with amy
+- Translation of categories, subcategories, months
+- last minute adding of rules if necessary
+- does she want to call generate summary once or multiple times, once will cause problem of distinguishing between messages
+- if amy happy, refactor code, comment  and generate javadocs
+
+
+
+## Verbalisation of Numbers
 - Run Governor class
 - Will ask for multiple inputs
 - number and no, returns number without context
 - number and yes, returns number in context. Additional inputs are the noun, the type of; Ordinal, (Epithet or Predicate) Cardinals
 - The code will try to determine the grammatically correct manner to qualify that noun using that integer
 
-### example of a cardinal/epithet
+#### example of a cardinal/epithet verbalisation
 - Java Governor
 - y
 - 2 
@@ -14,7 +37,7 @@
 - E
 Output (izinja ezimbili)
 
-### example of a ordinal
+#### example of a ordinal verbalisation
 - Java Governor
 - y
 - 2 
@@ -22,14 +45,12 @@ Output (izinja ezimbili)
 - O
 Output (isihlangu sesibili)
 
-## Example of a out of context number
+#### Example of a out of context number
 -- Java Governor
 -- 3162
 -- n
 Output(izinkulungwane eziyisitatu nekhulu namashumi ayisithupha nambili)
 
 
-#### The goal is to remove this various inputs and the main method and the class will just take parameters, during refactorign
 
-###Find survey at
-https://bantunlg.limesurvey.net/228399?lang=en
+
