@@ -1,17 +1,9 @@
-# Daft
+# DAFT
 
-## Generating summaries NLG
-- create instance of NLG class
--   NLG nlg = new NLG();
-- call method generate summary to create a summary
-- with message as argument; returns a message as string
--   nlg.generateSummary(message);
+### Capable of: Generating NLG summaries and verbalisation numbers in and out of context
+#### For generating summaries: see class NLG
+#### For verbalisation of numbers: see class Governor.
 
-
-
-
-
-## For demonstration purposes only
 
 ### Generating summaries
 - In NLG.java there is a main method which takes user input
@@ -22,8 +14,6 @@
 - Then to the linguistic realisers
 - sends sentence plan to the linguistic realiser
 - prints the generated text 
-
-
 
 
 ### Verbalisation of Numbers
@@ -57,4 +47,25 @@ Output(izinkulungwane eziyisitatu nekhulu namashumi ayisithupha nambili)
 
 
 
+## Generating summaries NLG with external content selector
+- create instance of NLG class
+-   NLG nlg = new NLG();
+- call method generate summary to create a summary
+- with message as argument; returns a message as string
+-   nlg.generateSummary(message);
 
+
+
+
+
+
+
+#### NB: External Libraries used. 
+###### Jar files for each stored in the Java libraries folder
+- Commons-collectiosn4-4.1
+- Commons-compress-1.21
+- Commons-lang3-3.12.0
+- Commons-text-1.9
+- Poi-3.17
+- Poi-4
+- xmlbeans
