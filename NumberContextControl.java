@@ -1,4 +1,9 @@
 import java.util.Objects;
+
+/**
+ * Responsible for verbalisation of numbers in and out of context
+ * Depends on the parameters passed into the constructor
+ */
 public class NumberContextControl {
     
     static int numberInput;
@@ -16,7 +21,7 @@ public class NumberContextControl {
         nounInput = noun_input.toLowerCase();
     }
 
-    public static String verbalise(){
+    public static String verbalise(String origin){
 
          //number formation
         NumbersVerbaliser number = new NumbersVerbaliser(numberInput);
@@ -36,22 +41,34 @@ public class NumberContextControl {
                 String constructedNumber = constructCardinalNumber(relativeNoun,nounData,number.inputNumber,numberAString);
                 if(nounType.equals("e")){
                     finalSentence = constructSentence(nounInput,constructedNumber,"epithet");
-                    
-    
                 }
                 else{
                     finalSentence = constructSentence(nounInput,constructedNumber,"predicate");
                 }
-                return constructedNumber; //dont return on normal circumstances
+
+                //check function that called to return appropriately
+                //where G = Governor
+                if(origin.equals("G"))
+                {
+                    return finalSentence;
+                }
+                else{
+                    return constructedNumber; 
+                }
+                
             }
             else{
                 String constructedOrdinal = constructOrdinalNumber(nounData,number.inputNumber,numberAString);
                 finalSentence = constructSentence(nounInput,constructedOrdinal,"ordinal");
                 
-                return constructedOrdinal; //dont return on normal circumstances
+                if(origin.equals("G")){
+                    return finalSentence;
+                }
+                else{
+                    return constructedOrdinal; 
+                }   
 
             }
-            //return finalSentence; //ordinarily return this
              
         }
     }
@@ -123,13 +140,7 @@ public class NumberContextControl {
 
         /**
          * Rule 7
-         * Indefinite adjectives
-         * used to describe a noun in a non-specific sense
          * odwa vs nye, odwa often used for single objects in each class with slight variations for that class
-         * Not married to the idea of implementing but quite interesting 
-         * Interesting if number == nye and singularity == false, the produced text == another
-         *          eg abantu abanye == other people
-         *          not sure if this holds for all cases though
          */
         String[] possessiveParticles = {"y","l","y","s","w","l","b","k"};
         if (number==1 && nounData.singularity){
@@ -144,7 +155,7 @@ public class NumberContextControl {
 
 
         /**
-         * rule 7 if two vowels(relative and pronoun) ,discard the pronoun vowel
+         * rule 8 if two vowels(relative and pronoun) ,discard the pronoun vowel
          */ 
         if ( pNoun!="a" && pNoun!="u" && pNoun!="i"){
             //Do not discard pronoun

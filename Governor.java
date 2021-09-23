@@ -15,15 +15,15 @@ public class Governor {
         if (context.equals("y")){
             System.out.println("Enter a noun: ");
             String nounInput = userInput.nextLine();
-            System.out.println("Enter Texttype (E, P or O): ");
+            System.out.println("Enter number type \n(E) Cardinal as an epithet \n(P) Cardinal as a predicate \n(O) Ordinal number ");
             String textType = userInput.nextLine().toLowerCase();
 
             NumberContextControl nc2 = new NumberContextControl(numberInput,nounInput,textType);
-            System.out.println(nc2.verbalise());
+            System.out.println(nc2.verbalise("G"));
         }
         else{
             NumberContextControl nc1 = new NumberContextControl(numberInput);
-            System.out.println(nc1.verbalise());
+            System.out.println(nc1.verbalise("G"));
         }
         userInput.close();
 

@@ -2,6 +2,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+/**
+ * This class is responsible for the pipeline stage of sentence planning
+ * Takes a message as argument and produces a sentence plan
+ */
 
 public class SentencePlanning {
     static ArrayList<String> messageStatus = new ArrayList<String>();

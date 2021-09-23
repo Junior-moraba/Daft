@@ -1,3 +1,7 @@
+
+/**
+ * This class is responsible for conversion of a numeral to words 
+ */
 public class NumbersVerbaliser{
 
     /**

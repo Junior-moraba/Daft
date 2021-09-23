@@ -1,3 +1,9 @@
+
+/**
+ * Generic class of a noun
+ * Each noun has morphemes associated to it by virtue of noun class
+ * This class stores the noun and its associated information
+ */
 public class NounData{
     int nClass;
     String personalNoun;

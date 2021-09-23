@@ -9,7 +9,7 @@
 - In NLG.java there is a main method which takes user input
 - will ask what type of summary required. 
 - type 1: group summary. All the summaries grouped into one
-- type 2: individual summary. User will then be presented with different options of individual summaries availabe
+- type 2: individual summary. User will then be presented with different options of individual summaries availabe. (This messages are in a class called Messagecollection)
 - each of this will be sent to the sentence planner
 - Then to the linguistic realisers
 - sends sentence plan to the linguistic realiser
@@ -26,10 +26,10 @@
 #### example of a cardinal/epithet verbalisation
 - Java Governor
 - y
-- 2 
-- izinja
-- E
-Output (izinja ezimbili)
+- 23 
+- isihlangu
+- P
+Output (isihlangu esingamashumi amabili nantatu)
 
 #### example of a ordinal verbalisation
 - Java Governor
@@ -53,9 +53,6 @@ Output(izinkulungwane eziyisitatu nekhulu namashumi ayisithupha nambili)
 - call method generate summary to create a summary
 - with message as argument; returns a message as string
 -   nlg.generateSummary(message);
-
-
-
 
 
 

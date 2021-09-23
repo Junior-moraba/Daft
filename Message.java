@@ -1,5 +1,8 @@
 import java.util.LinkedHashMap;
-
+/**
+ * Generic Class of a message 
+ * remember message == output of text planner
+ */
 public class Message {
     private final String messageID;
     private final String relation;

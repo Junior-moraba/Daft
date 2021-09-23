@@ -1,5 +1,9 @@
 import java.util.Map;
 
+/**
+ * Generic class of a sentence plan 
+ * Remember sentence plan == template + message arguments
+ */
 public class SentencePlan {
     
     private String template;

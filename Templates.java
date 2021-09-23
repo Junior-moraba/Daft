@@ -7,8 +7,17 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
 import java.util.ArrayList;
 import java.util.Random;
+/**
+ * Responsible for getting templates from external source(excel file)
+ * Stores the templates and makes them ready to be called by sentence planner
+ */
 
 public class Templates {
+    /**
+     * To avoid opening the excel file numerous times, all the templates will be stored in arraylist and retrievvd when needed
+     * An array for each type of relation. Budget repeating as different templates exist for the two screens which convey
+     * information about the message
+     */
     static ArrayList<String> balanceTemplates = new ArrayList<String>();
     static ArrayList<String> budgetMetTemplates = new ArrayList<String>();
     static ArrayList<String> budgetOverTemplates = new ArrayList<String>();
@@ -35,8 +44,7 @@ public class Templates {
         try{
 
             //Open excel file
-            //FileInputStream fileInputStream =new FileInputStream(new File(".//BasicTemplates.xlsx"));
-            FileInputStream fileInputStream =new FileInputStream(new File(".//ComplexTemplates.xlsx"));
+            FileInputStream fileInputStream =new FileInputStream(new File(".//Templates.xlsx"));
             //creating Workbook
             XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
             XSSFSheet sheet = workbook.getSheetAt(0);     //creating a Sheet object to retrieve object  
@@ -122,6 +130,11 @@ public class Templates {
             e.printStackTrace();  
         }
     }
+    /**
+     * Randomly selects an appropriate template
+     * an appropriate template is a template that meets criteria such as message status, relatio
+     * Random selection done to increase variety in messages produced
+     */ 
     public static String selectAppropriateTemplate( String message){
 
         Random random = new Random();
