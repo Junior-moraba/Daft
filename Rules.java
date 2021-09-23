@@ -63,11 +63,6 @@ public class Rules {
 
         return prefixNcategory;
     }
-    public static String Rule5(String prefix,String category){
-        //use the appropriate version of kwa
-
-        return category;
-    }
 
 
 

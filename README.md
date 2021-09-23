@@ -7,22 +7,26 @@
 - with message as argument; returns a message as string
 -   nlg.generateSummary(message);
 
-### Example of generating a summaries (delete)
-- In NLG.java
-- Main method gets messages from message collection (other messages commented out, uncomment message to generate summary about it)
-- sends them to the sentence planner
+
+
+
+
+## For demonstration purposes only
+
+### Generating summaries
+- In NLG.java there is a main method which takes user input
+- will ask what type of summary required. 
+- type 1: group summary. All the summaries grouped into one
+- type 2: individual summary. User will then be presented with different options of individual summaries availabe
+- each of this will be sent to the sentence planner
+- Then to the linguistic realisers
 - sends sentence plan to the linguistic realiser
 - prints the generated text 
 
-#### Things to discuss with amy
-- Translation of categories, subcategories, months
-- last minute adding of rules if necessary
-- does she want to call generate summary once or multiple times, once will cause problem of distinguishing between messages
-- if amy happy, refactor code, comment  and generate javadocs
 
 
 
-## Verbalisation of Numbers
+### Verbalisation of Numbers
 - Run Governor class
 - Will ask for multiple inputs
 - number and no, returns number without context
